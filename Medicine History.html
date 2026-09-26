@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine History | Smart Medicine Reminder</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f5f9fc;
+            color: #183b56;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #e6edf2;
+        }
+
+        .navbar-brand {
+            color: #123d5b;
+            font-weight: 700;
+            font-size: 1.15rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            color: #0d8eea;
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: #49677c;
+            font-size: .9rem;
+            font-weight: 500;
+            text-decoration: none;
+            margin-left: 25px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #087fda;
+        }
+
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            padding: 45px 15px 70px;
+        }
+
+        .container-custom {
+            max-width: 1150px;
+            margin: auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #087fda;
+            text-decoration: none;
+            font-size: .85rem;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #123d5b;
+        }
+
+        .page-header p {
+            color: #718797;
+            font-size: .9rem;
+            margin-bottom: 30px;
+        }
+
+
+        /* =========================
+           SUMMARY CARDS
+        ========================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid #e5edf3;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 8px 25px rgba(20, 65, 90, .05);
+        }
+
+        .summary-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eaf6ff;
+            color: #087fda;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-number {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #123d5b;
+        }
+
+        .summary-label {
+            font-size: .78rem;
+            color: #8194a2;
+            margin-top: 3px;
+        }
+
+
+        /* =========================
+           HISTORY CARD
+        ========================= */
+
+        .history-card {
+            background: white;
+            border: 1px solid #e5edf3;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(20, 65, 90, .05);
+            overflow: hidden;
+        }
+
+
+        /* =========================
+           FILTER AREA
+        ========================= */
+
+        .filter-area {
+            padding: 22px;
+            border-bottom: 1px solid #edf2f5;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #123d5b;
+            margin-bottom: 15px;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            border: 1px solid #dce7ee;
+            padding: 10px 12px;
+            font-size: .82rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #55aee8;
+            box-shadow: 0 0 0 3px rgba(8, 127, 218, .08);
+        }
+
+        .clear-btn {
+            border: 1px solid #dce7ee;
+            background: white;
+            color: #526e80;
+            border-radius: 10px;
+            padding: 9px 15px;
+            font-size: .8rem;
+        }
+
+        .clear-btn:hover {
+            background: #f4f8fa;
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8fbfd;
+        }
+
+        th {
+            padding: 16px 20px;
+            font-size: .72rem;
+            color: #718797;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            border-bottom: 1px solid #edf2f5;
+        }
+
+        td {
+            padding: 17px 20px;
+            border-bottom: 1px solid #edf2f5;
+            font-size: .82rem;
+            color: #476579;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fbfdff;
+        }
+
+
+        /* =========================
+           MEDICINE CELL
+        ========================= */
+
+        .medicine-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .medicine-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: #eaf6ff;
+            color: #087fda;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .medicine-name {
+            font-weight: 600;
+            color: #123d5b;
+            margin-bottom: 3px;
+        }
+
+        .medicine-dose {
+            font-size: .72rem;
+            color: #8a9ba7;
+        }
+
+
+        /* =========================
+           DATE CELL
+        ========================= */
+
+        .date-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            background: #f0f7fb;
+            color: #087fda;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-main {
+            font-size: .8rem;
+            color: #426277;
+        }
+
+        .date-sub {
+            font-size: .68rem;
+            color: #9aa9b3;
+            margin-top: 2px;
+        }
+
+
+        /* =========================
+           STATUS BADGES
+        ========================= */
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: .7rem;
+            font-weight: 600;
+        }
+
+        .status-scheduled {
+            background: #eaf6ff;
+            color: #087fda;
+        }
+
+        .status-taken {
+            background: #e9f9ef;
+            color: #18864b;
+        }
+
+        .status-missed {
+            background: #fff0f0;
+            color: #d33c3c;
+        }
+
+        .status-skipped {
+            background: #fff8e8;
+            color: #b67a00;
+        }
+
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .status-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 6px 9px;
+            font-size: .68rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .taken-btn {
+            background: #e9f9ef;
+            color: #18864b;
+        }
+
+        .taken-btn:hover {
+            background: #d4f3e1;
+        }
+
+        .missed-btn {
+            background: #fff0f0;
+            color: #d33c3c;
+        }
+
+        .missed-btn:hover {
+            background: #ffe0e0;
+        }
+
+        .skipped-btn {
+            background: #fff8e8;
+            color: #b67a00;
+        }
+
+        .skipped-btn:hover {
+            background: #ffefc7;
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            display: none;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #b9d5e5;
+        }
+
+        .empty-state h4 {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #456477;
+        }
+
+        .empty-state p {
+            font-size: .78rem;
+            color: #94a5b0;
+        }
+
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast-message {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #123d5b;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: .78rem;
+            box-shadow: 0 12px 30px rgba(0,0,0,.15);
+            display: none;
+            z-index: 9999;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .page {
+                padding: 30px 12px 50px;
+            }
+
+            .page-header h1 {
+                font-size: 1.55rem;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 16px;
+            }
+
+            .summary-number {
+                font-size: 1.4rem;
+            }
+
+            .filter-area {
+                padding: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar">
+
+    <div class="container">
+
+        <div class="d-flex align-items-center justify-content-between">
+
+            <a
+                class="navbar-brand"
+                href="index.html">
+
+                <i class="bi bi-capsule-pill"></i>
+
+                Smart Medicine Reminder
+
+            </a>
+
+
+            <div>
+
+                <a
+                    href="index.html"
+                    class="nav-link d-inline-block">
+
+                    Home
+
+                </a>
+
+      <a
+    href="My Medicines.html"
+    class="nav-link d-inline-block">
+
+    My Medicines
+
+</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================
+     PAGE
+========================= -->
+
+<main class="page">
+
+    <div class="container-custom">
+
+
+        <!-- HEADER -->
+
+        <section class="page-header">
+
+            <a
+                href="index.html"
+                class="back-link">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Home
+
+            </a>
+
+
+            <h1>
+                Medicine History
+            </h1>
+
+
+            <p>
+                Track your medicines and monitor your medication progress.
+            </p>
+
+        </section>
+
+
+
+        <!-- =========================
+             SUMMARY
+        ========================= -->
+
+        <section class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-journal-medical"></i>
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="totalRecords">
+
+                    0
+
+                </div>
+
+                <div class="summary-label">
+                    Total Records
+                </div>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="takenRecords">
+
+                    0
+
+                </div>
+
+                <div class="summary-label">
+                    Taken
+                </div>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="missedRecords">
+
+                    0
+
+                </div>
+
+                <div class="summary-label">
+                    Missed
+                </div>
+
+            </div>
+
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="adherence">
+
+                    0%
+
+                </div>
+
+                <div class="summary-label">
+                    Adherence
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             HISTORY CARD
+        ========================= -->
+
+        <section class="history-card">
+
+
+            <!-- FILTERS -->
+
+            <div class="filter-area">
+
+                <div class="filter-title">
+                    Filter History
+                </div>
+
+
+                <div class="row g-2">
+
+
+                    <div class="col-md-4">
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="form-control"
+                            placeholder="Search medicine..."
+                            oninput="filterHistory()">
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <input
+                            type="date"
+                            id="dateFilter"
+                            class="form-control"
+                            onchange="filterHistory()">
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <select
+                            id="statusFilter"
+                            class="form-select"
+                            onchange="filterHistory()">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="scheduled">
+                                Scheduled
+                            </option>
+
+                            <option value="taken">
+                                Taken
+                            </option>
+
+                            <option value="missed">
+                                Missed
+                            </option>
+
+                            <option value="skipped">
+                                Skipped
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <button
+                            class="clear-btn w-100"
+                            onclick="clearFilters()">
+
+                            <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                            Clear
+
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TABLE -->
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Medicine
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="historyBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- EMPTY -->
+
+            <div
+                class="empty-state"
+                id="emptyState">
+
+                <i class="bi bi-clipboard2-x"></i>
+
+                <h4>
+                    No medicine history found
+                </h4>
+
+                <p>
+                    Add a medicine or reminder to see it here.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+
+
+
+<!-- TOAST -->
+
+<div
+    class="toast-message"
+    id="toastMessage">
+
+    Status updated successfully ✅
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   LOAD DATA
+========================================== */
+
+let medicines =
+    JSON.parse(
+        localStorage.getItem("medicines")
+    ) || [];
+
+
+let reminders =
+    JSON.parse(
+        localStorage.getItem("reminders")
+    ) || [];
+
+
+const historyBody =
+    document.getElementById("historyBody");
+
+
+const emptyState =
+    document.getElementById("emptyState");
+
+
+
+/* ==========================================
+   LOAD HISTORY
+========================================== */
+
+function loadHistory() {
+
+    historyBody.innerHTML = "";
+
+
+    /* --------------------------
+       MEDICINES
+    -------------------------- */
+
+    medicines.forEach(
+        function(medicine, index) {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.dataset.medicine =
+                (medicine.name || "").toLowerCase();
+
+
+            row.dataset.date =
+                medicine.startDate || "";
+
+
+            row.dataset.status =
+                "scheduled";
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <div class="date-cell">
+
+                        <div class="date-icon">
+
+                            <i class="bi bi-calendar-check"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="date-main">
+
+                                ${medicine.startDate || "-"}
+
+                            </div>
+
+                            <div class="date-sub">
+
+                                Until ${medicine.endDate || "-"}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <div class="medicine-cell">
+
+                        <div class="medicine-icon">
+
+                            <i class="bi bi-capsule"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="medicine-name">
+
+                                ${escapeHtml(medicine.name || "Medicine")}
+
+                            </div>
+
+                            <div class="medicine-dose">
+
+                                ${escapeHtml(medicine.dose || "")}
+                                ${medicine.food ? " • " + escapeHtml(medicine.food) : ""}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHtml(medicine.time || "-")}
+
+                </td>
+
+
+                <td>
+
+                    <span class="status-badge status-scheduled">
+
+                        <i class="bi bi-clock-fill"></i>
+
+                        Scheduled
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span style="font-size:.7rem;color:#9aa9b3;">
+
+                        Medicine
+
+                    </span>
+
+                </td>
+
+            `;
+
+
+            historyBody.appendChild(row);
+
+        }
+    );
+
+
+
+    /* --------------------------
+       REMINDERS
+    -------------------------- */
+
+    reminders.forEach(
+        function(reminder, index) {
+
+            const row =
+                document.createElement("tr");
+
+
+            const status =
+                reminder.status || "scheduled";
+
+
+            row.dataset.medicine =
+                (reminder.medicineName || "").toLowerCase();
+
+
+            row.dataset.date =
+                reminder.date || "";
+
+
+            row.dataset.status =
+                status;
+
+
+            let statusHTML = "";
+
+
+            if (status === "taken") {
+
+                statusHTML = `
+
+                    <span class="status-badge status-taken">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Taken
+
+                    </span>
+
+                `;
+
+            }
+
+            else if (status === "missed") {
+
+                statusHTML = `
+
+                    <span class="status-badge status-missed">
+
+                        <i class="bi bi-x-circle-fill"></i>
+
+                        Missed
+
+                    </span>
+
+                `;
+
+            }
+
+            else if (status === "skipped") {
+
+                statusHTML = `
+
+                    <span class="status-badge status-skipped">
+
+                        <i class="bi bi-skip-forward-fill"></i>
+
+                        Skipped
+
+                    </span>
+
+                `;
+
+            }
+
+            else {
+
+                statusHTML = `
+
+                    <span class="status-badge status-scheduled">
+
+                        <i class="bi bi-clock-fill"></i>
+
+                        Scheduled
+
+                    </span>
+
+                `;
+
+            }
+
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <div class="date-cell">
+
+                        <div class="date-icon">
+
+                            <i class="bi bi-bell"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="date-main">
+
+                                ${reminder.date || "Reminder"}
+
+                            </div>
+
+                            <div class="date-sub">
+
+                                Saved Reminder
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    <div class="medicine-cell">
+
+                        <div class="medicine-icon">
+
+                            <i class="bi bi-capsule"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="medicine-name">
+
+                                ${escapeHtml(reminder.medicineName || "Medicine")}
+
+                            </div>
+
+                            <div class="medicine-dose">
+
+                                ${escapeHtml(reminder.dosage || "")}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHtml(reminder.reminderTime || "-")}
+
+                </td>
+
+
+                <td>
+
+                    ${statusHTML}
+
+                </td>
+
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <button
+                            class="status-btn taken-btn"
+                            onclick="updateReminderStatus(${index}, 'taken')">
+
+                            <i class="bi bi-check"></i>
+
+                        </button>
+
+
+                        <button
+                            class="status-btn missed-btn"
+                            onclick="updateReminderStatus(${index}, 'missed')">
+
+                            <i class="bi bi-x"></i>
+
+                        </button>
+
+
+                        <button
+                            class="status-btn skipped-btn"
+                            onclick="updateReminderStatus(${index}, 'skipped')">
+
+                            <i class="bi bi-skip-forward"></i>
+
+                        </button>
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            historyBody.appendChild(row);
+
+        }
+    );
+
+
+    filterHistory();
+
+}
+
+
+
+/* ==========================================
+   UPDATE REMINDER STATUS
+========================================== */
+
+function updateReminderStatus(
+    index,
+    newStatus
+) {
+
+    reminders =
+        JSON.parse(
+            localStorage.getItem("reminders")
+        ) || [];
+
+
+    if (!reminders[index]) {
+        return;
+    }
+
+
+    reminders[index].status =
+        newStatus;
+
+
+    localStorage.setItem(
+        "reminders",
+        JSON.stringify(reminders)
+    );
+
+
+    showToast(
+        "Reminder marked as " +
+        newStatus +
+        " ✅"
+    );
+
+
+    loadHistory();
+
+}
+
+
+
+/* ==========================================
+   FILTER
+========================================== */
+
+function filterHistory() {
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const date =
+        document
+            .getElementById("dateFilter")
+            .value;
+
+
+    const status =
+        document
+            .getElementById("statusFilter")
+            .value;
+
+
+    const rows =
+        historyBody.querySelectorAll("tr");
+
+
+    let visibleCount = 0;
+
+
+    rows.forEach(
+        function(row) {
+
+            const medicine =
+                row.dataset.medicine || "";
+
+
+            const rowDate =
+                row.dataset.date || "";
+
+
+            const rowStatus =
+                row.dataset.status || "";
+
+
+            const matchesSearch =
+                medicine.includes(search);
+
+
+            const matchesDate =
+                !date ||
+                rowDate === date;
+
+
+            const matchesStatus =
+                status === "all" ||
+                rowStatus === status;
+
+
+            if (
+                matchesSearch &&
+                matchesDate &&
+                matchesStatus
+            ) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            }
+
+            else {
+
+                row.style.display = "none";
+
+            }
+
+        }
+    );
+
+
+    emptyState.style.display =
+        visibleCount === 0
+            ? "block"
+            : "none";
+
+
+    updateSummary();
+
+}
+
+
+
+/* ==========================================
+   SUMMARY
+========================================== */
+
+function updateSummary() {
+
+    const rows =
+        historyBody.querySelectorAll("tr");
+
+
+    let total = 0;
+
+    let taken = 0;
+
+    let missed = 0;
+
+
+    rows.forEach(
+        function(row) {
+
+            if (
+                row.style.display === "none"
+            ) {
+                return;
+            }
+
+
+            total++;
+
+
+            if (
+                row.dataset.status === "taken"
+            ) {
+
+                taken++;
+
+            }
+
+
+            if (
+                row.dataset.status === "missed"
+            ) {
+
+                missed++;
+
+            }
+
+        }
+    );
+
+
+    document
+        .getElementById("totalRecords")
+        .textContent = total;
+
+
+    document
+        .getElementById("takenRecords")
+        .textContent = taken;
+
+
+    document
+        .getElementById("missedRecords")
+        .textContent = missed;
+
+
+    const completed =
+        taken + missed;
+
+
+    const adherence =
+        completed > 0
+            ? Math.round(
+                (taken / completed) * 100
+            )
+            : 0;
+
+
+    document
+        .getElementById("adherence")
+        .textContent =
+            adherence + "%";
+
+}
+
+
+
+/* ==========================================
+   CLEAR FILTERS
+========================================== */
+
+function clearFilters() {
+
+    document
+        .getElementById("searchInput")
+        .value = "";
+
+
+    document
+        .getElementById("dateFilter")
+        .value = "";
+
+
+    document
+        .getElementById("statusFilter")
+        .value = "all";
+
+
+    filterHistory();
+
+}
+
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toastMessage"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            toast.style.display =
+                "none";
+
+        },
+        2500
+    );
+
+}
+
+
+
+/* ==========================================
+   SECURITY
+========================================== */
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+
+    div.textContent =
+        value;
+
+
+    return div.innerHTML;
+
+}
+
+
+
+/* ==========================================
+   INITIAL LOAD
+========================================== */
+
+loadHistory();
+
+
+</script>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Medicine Reminder</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f6fbff;
+            color: #183b56;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 25px rgba(0, 105, 170, 0.08);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #087fda !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #35576e !important;
+            margin: 0 7px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #087fda !important;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 88vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 85% 20%, rgba(39, 170, 255, 0.15), transparent 28%),
+                radial-gradient(circle at 10% 90%, rgba(0, 123, 255, 0.10), transparent 30%),
+                linear-gradient(135deg, #f8fcff, #eaf7ff);
+        }
+
+        .hero-content {
+            animation: fadeUp 1s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #e1f3ff;
+            color: #087fda;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #103b5b;
+        }
+
+        .hero h1 span {
+            color: #087fda;
+        }
+
+        .hero p {
+            font-size: 1.08rem;
+            line-height: 1.8;
+            color: #557487;
+            max-width: 610px;
+            margin-bottom: 30px;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, #087fda, #14a7e8);
+            color: white;
+            border: none;
+            padding: 13px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(8, 127, 218, 0.22);
+        }
+
+        .btn-main:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(8, 127, 218, 0.30);
+        }
+
+        .btn-outline-main {
+            color: #087fda;
+            border: 2px solid #087fda;
+            padding: 11px 27px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            background: white;
+        }
+
+        .btn-outline-main:hover {
+            background: #087fda;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Hero illustration */
+        .hero-visual {
+            position: relative;
+            height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .main-card {
+            position: relative;
+            width: min(380px, 88%);
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 25px 70px rgba(0, 101, 160, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        .pill-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e5f6ff, #c9eeff);
+            color: #087fda;
+            font-size: 2.5rem;
+            box-shadow: 0 15px 30px rgba(8, 127, 218, 0.13);
+        }
+
+        .medicine-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f6fbff;
+            border-radius: 14px;
+            padding: 13px 15px;
+            margin-top: 12px;
+        }
+
+        .medicine-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .medicine-small-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e3f4ff;
+            color: #087fda;
+        }
+
+        .medicine-name {
+            font-weight: 600;
+            font-size: 0.93rem;
+        }
+
+        .medicine-time {
+            font-size: 0.75rem;
+            color: #718898;
+        }
+
+        .status {
+            font-size: 0.72rem;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .status.pending {
+            background: #fff4d8;
+            color: #bc7a00;
+        }
+
+        .status.taken {
+            background: #ddf8e9;
+            color: #18854a;
+        }
+
+        .floating {
+            position: absolute;
+            background: white;
+            border-radius: 18px;
+            padding: 14px 17px;
+            box-shadow: 0 18px 40px rgba(0, 105, 170, 0.14);
+            animation: floatSmall 3.5s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .floating.one {
+            top: 12%;
+            left: 0;
+        }
+
+        .floating.two {
+            bottom: 12%;
+            right: 0;
+            animation-delay: 1s;
+        }
+
+        .floating i {
+            color: #087fda;
+            margin-right: 7px;
+        }
+
+        /* About */
+        .section {
+            padding: 95px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .section-title h2 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #123d5b;
+        }
+
+        .section-title p {
+            color: #69808f;
+            max-width: 700px;
+            margin: 12px auto 0;
+        }
+
+        .about-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            height: 100%;
+            box-shadow: 0 15px 40px rgba(0, 85, 140, 0.07);
+            transition: 0.35s;
+        }
+
+        .about-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 22px 50px rgba(0, 85, 140, 0.11);
+        }
+
+        .about-card i {
+            font-size: 2.3rem;
+            color: #087fda;
+            margin-bottom: 20px;
+        }
+
+        .about-card h4 {
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .about-card p {
+            color: #69808f;
+            line-height: 1.8;
+        }
+
+        /* Features */
+        .features-section {
+            background: linear-gradient(180deg, #f2faff, #ffffff);
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 22px;
+            height: 100%;
+            border: 1px solid #e8f3f9;
+            transition: 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 22px 50px rgba(0, 96, 160, 0.11);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e6f5ff;
+            color: #087fda;
+            font-size: 1.7rem;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(6deg) scale(1.06);
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #718898;
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        /* Contact */
+        .contact-box {
+            background: linear-gradient(135deg, #087fda, #14a7e8);
+            border-radius: 28px;
+            color: white;
+            padding: 50px;
+            box-shadow: 0 25px 60px rgba(8, 127, 218, 0.20);
+        }
+
+        .contact-box h2 {
+            font-weight: 700;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .contact-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.17);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            padding: 25px 0;
+            background: #082d45;
+            color: #b8d2df;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.94);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes floatCard {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes floatSmall {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .hero {
+                padding: 80px 0;
+            }
+
+            .hero-visual {
+                height: 420px;
+                margin-top: 35px;
+            }
+
+            .floating.one {
+                left: 5%;
+            }
+
+            .floating.two {
+                right: 5%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                min-height: auto;
+                padding: 70px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 0.98rem;
+            }
+
+            .hero-visual {
+                height: 390px;
+            }
+
+            .floating {
+                font-size: 0.8rem;
+                padding: 11px 13px;
+            }
+
+            .section {
+                padding: 70px 0;
+            }
+
+            .contact-box {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-capsule"></i>
+                Smart Medicine Reminder
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                      <a href="login.html" class="btn btn-outline-main me-2">
+    Login
+</a>
+
+                       <a href="register.html" class="btn btn-main">
+    Register
+</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-lg-6">
+                    <div class="hero-content">
+
+                        <div class="hero-badge">
+                            <i class="bi bi-heart-pulse-fill"></i>
+                            Your Personal Medicine Assistant
+                        </div>
+
+                        <h1>
+                            Never Miss Your
+                            <span>Medicine</span> Again!
+                        </h1>
+
+                        <p>
+                            Smart Medicine Reminder helps patients and senior
+                            citizens manage medicines, reminders and health
+                            history in one simple place.
+                        </p>
+
+                        <div class="d-flex gap-3 flex-wrap">
+                           <a href="register.html" class="btn btn-main">
+    Get Started
+    <i class="bi bi-arrow-right ms-2"></i>
+</a>
+
+                            <a href="#features" class="btn btn-outline-main">
+                                Explore Features
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6">
+                    <div class="hero-visual">
+
+                        <div class="floating one">
+                            <i class="bi bi-bell-fill"></i>
+                            Medicine Reminder
+                        </div>
+
+                        <div class="floating two">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Stay on Track
+                        </div>
+
+                        <div class="main-card">
+
+                            <div class="pill-icon">
+                                <i class="bi bi-capsule-pill"></i>
+                            </div>
+
+                            <h4 class="text-center fw-bold mb-1">
+                                Today's Medicines
+                            </h4>
+
+                            <p class="text-center text-muted small mb-4">
+                                Keep your health on schedule
+                            </p>
+
+                            <div class="medicine-item">
+
+                                <div class="medicine-left">
+                                    <div class="medicine-small-icon">
+                                        <i class="bi bi-capsule"></i>
+                                    </div>
+
+                                    <div>
+                                        <div class="medicine-name">
+                                            Dolo 650
+                                        </div>
+
+                                        <div class="medicine-time">
+                                            08:00 AM · 1 Tablet
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <span class="status pending">
+                                    Pending
+                                </span>
+
+                            </div>
+
+
+                            <div class="medicine-item">
+
+                                <div class="medicine-left">
+                                    <div class="medicine-small-icon">
+                                        <i class="bi bi-capsule"></i>
+                                    </div>
+
+                                    <div>
+                                        <div class="medicine-name">
+                                            Vitamin C
+                                        </div>
+
+                                        <div class="medicine-time">
+                                            02:00 PM · 1 Tablet
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <span class="status taken">
+                                    Taken
+                                </span>
+
+                            </div>
+
+
+                            <div class="medicine-item">
+
+                                <div class="medicine-left">
+                                    <div class="medicine-small-icon">
+                                        <i class="bi bi-capsule"></i>
+                                    </div>
+
+                                    <div>
+                                        <div class="medicine-name">
+                                            Calcium
+                                        </div>
+
+                                        <div class="medicine-time">
+                                            08:00 PM · 1 Tablet
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <span class="status pending">
+                                    Pending
+                                </span>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- About -->
+    <section class="section" id="about">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>About Us</h2>
+
+                <p>
+                    A simple and smart solution designed to help users
+                    organize medicines and stay consistent with their
+                    medication schedules.
+                </p>
+            </div>
+
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="about-card">
+
+                        <i class="bi bi-person-heart"></i>
+
+                        <h4>Built for Better Health</h4>
+
+                        <p>
+                            Smart Medicine Reminder makes it easier to keep
+                            track of daily medicines, upcoming doses and
+                            medicine history.
+                        </p>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="about-card">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        <h4>Simple & Organized</h4>
+
+                        <p>
+                            All your medicine information can be managed from
+                            one clean dashboard with an easy-to-use interface.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Features -->
+    <section class="section features-section" id="features">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Powerful Features</h2>
+
+                <p>
+                    Everything you need to organize and monitor your
+                    medicines more easily.
+                </p>
+            </div>
+
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="bi bi-capsule-pill"></i>
+                        </div>
+
+                        <h5>
+    <a href="Add Medicine.html" style="text-decoration: none; color: inherit;">
+        Add Medicine
+    </a>
+</h5>
+
+                        <p>
+                            Add medicine name, dose, timing and other details
+                            in seconds.
+                        </p>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="bi bi-alarm-fill"></i>
+                        </div>
+
+                        <h5>
+    <a href="Set Reminder.html" style="text-decoration: none; color: inherit;">
+        Set Reminder
+    </a>
+</h5>
+
+                        <p>
+                            Keep track of your medicine schedule and upcoming
+                            doses.
+                        </p>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+
+                       <h5>
+    <a href="Medicine History.html" style="text-decoration: none; color: inherit;">
+        Medicine History
+    </a>
+</h5>
+
+                        <p>
+                            View previous medicine activity and monitor
+                            taken or missed doses.
+                        </p>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="bi bi-camera-fill"></i>
+                        </div>
+
+                        <h5>
+    <a href="pill verification.html" style="text-decoration: none; color: inherit;">
+        Pill Verification
+    </a>
+</h5>
+
+<p>
+    Upload a medicine image for an assistive
+    verification feature.
+</p>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+        <div class="container">
+
+            <div class="contact-box">
+
+                <div class="row align-items-center">
+
+                    <div class="col-lg-7">
+
+                        <h2 class="mb-3">
+                            Need Help?
+                        </h2>
+
+                        <p class="mb-0 opacity-75">
+                            Get in touch with our support team for assistance
+                            with the Smart Medicine Reminder application.
+                        </p>
+
+                    </div>
+
+
+                    <div class="col-lg-5 mt-4 mt-lg-0">
+
+                        <div class="contact-item">
+
+                            <div class="contact-icon">
+                                <i class="bi bi-envelope-fill"></i>
+                            </div>
+
+                            <div>
+                                support@medireminder.com
+                            </div>
+
+                        </div>
+
+
+                        <div class="contact-item">
+
+                            <div class="contact-icon">
+                                <i class="bi bi-telephone-fill"></i>
+                            </div>
+
+                            <div>
+                                +91 XXXXX XXXXX
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">
+                © 2026 Smart Medicine Reminder. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+
+    <!-- JavaScript -->
+    <script>
+        function loginDemo() {
+            alert("Login page will be connected in the next step.");
+        }
+
+        function registerDemo() {
+            alert("Registration page will be connected in the next step.");
+        }
+
+        // Small scroll-reveal effect
+        const cards = document.querySelectorAll(".about-card, .feature-card");
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }
+                });
+            },
+            {
+                threshold: 0.15
+            }
+        );
+
+        cards.forEach((card) => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(25px)";
+            card.style.transition = "all 0.7s ease";
+            observer.observe(card);
+        });
+    </script>
+
+</body>
+</html>

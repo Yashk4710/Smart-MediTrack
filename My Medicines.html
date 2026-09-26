@@ -1,0 +1,2526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Medicines | Smart Medicine Reminder</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #087fda;
+            --secondary: #14a7e8;
+            --dark: #123d5b;
+            --text: #183b56;
+            --muted: #718898;
+            --light: #f5faff;
+            --border: #deebf2;
+            --success: #198754;
+            --danger: #dc3545;
+            --warning: #c88700;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 5% 10%,
+                    rgba(20, 167, 232, 0.12),
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 95% 90%,
+                    rgba(8, 127, 218, 0.08),
+                    transparent 25%
+                ),
+
+                var(--light);
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e4eef4;
+            box-shadow: 0 5px 25px rgba(0, 80, 130, 0.06);
+            padding: 14px 0;
+        }
+
+        .navbar-brand {
+            color: var(--primary) !important;
+            font-weight: 700;
+            font-size: 1.15rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: #5b7585 !important;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-left: 15px;
+            transition: 0.25s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary) !important;
+        }
+
+        .profile-button {
+            width: 39px;
+            height: 39px;
+            border: none;
+            border-radius: 50%;
+            margin-left: 12px;
+
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            min-height: calc(100vh - 70px);
+            padding: 42px 15px 60px;
+        }
+
+        .container-custom {
+            width: 100%;
+            max-width: 1120px;
+            margin: auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header {
+            animation: fadeUp 0.7s ease;
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 13px;
+            transition: 0.25s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+        }
+
+        .page-header h1 {
+            color: var(--dark);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+
+        /* =========================
+           ACTION BAR
+        ========================= */
+
+        .action-bar {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 17px 20px;
+            margin-bottom: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+
+            box-shadow: 0 8px 30px rgba(0, 80, 130, 0.05);
+
+            animation: fadeUp 0.8s ease;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 43px;
+
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            outline: none;
+
+            padding: 8px 14px 8px 39px;
+
+            font-size: 0.78rem;
+
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px rgba(8, 127, 218, 0.08);
+        }
+
+        .add-button {
+            height: 43px;
+            padding: 0 18px;
+
+            border: none;
+            border-radius: 11px;
+
+            color: white;
+
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+
+            font-size: 0.78rem;
+            font-weight: 600;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 9px 22px rgba(8, 127, 218, 0.18);
+
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 13px 27px rgba(8, 127, 218, 0.25);
+        }
+
+
+        /* =========================
+           TABLE CARD
+        ========================= */
+
+        .table-card {
+            background: white;
+
+            border: 1px solid var(--border);
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 45px rgba(0, 80, 130, 0.06);
+
+            animation: cardShow 0.8s ease;
+        }
+
+        .table-header {
+            padding: 20px 23px;
+
+            border-bottom: 1px solid #edf3f7;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-header h3 {
+            margin: 0;
+
+            font-size: 0.98rem;
+
+            color: var(--dark);
+
+            font-weight: 700;
+        }
+
+        .medicine-count {
+            color: var(--primary);
+
+            background: #eaf6ff;
+
+            border-radius: 20px;
+
+            padding: 5px 10px;
+
+            font-size: 0.68rem;
+
+            font-weight: 600;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .medicine-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 720px;
+        }
+
+        .medicine-table th {
+            color: #6c8291;
+
+            background: #f8fcff;
+
+            font-size: 0.71rem;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.4px;
+
+            padding: 16px 20px;
+
+            border-bottom: 1px solid #e9f1f5;
+
+            white-space: nowrap;
+        }
+
+        .medicine-table td {
+            padding: 18px 20px;
+
+            border-bottom: 1px solid #edf3f6;
+
+            font-size: 0.78rem;
+
+            vertical-align: middle;
+        }
+
+        .medicine-table tbody tr {
+            transition: 0.3s;
+        }
+
+        .medicine-table tbody tr:hover {
+            background: #fafdff;
+        }
+
+        .medicine-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =========================
+           MEDICINE
+        ========================= */
+
+        .medicine-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .medicine-icon {
+            width: 43px;
+            height: 43px;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            background: #e8f6ff;
+
+            color: var(--primary);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 1.12rem;
+        }
+
+        .medicine-name {
+            color: var(--dark);
+
+            font-weight: 700;
+
+            font-size: 0.8rem;
+        }
+
+        .medicine-subtitle {
+            color: var(--muted);
+
+            font-size: 0.64rem;
+
+            margin-top: 3px;
+        }
+
+
+        /* =========================
+           TIME
+        ========================= */
+
+        .time-cell {
+            color: var(--dark);
+
+            font-weight: 600;
+        }
+
+        .time-cell i {
+            color: var(--primary);
+
+            margin-right: 5px;
+        }
+
+
+        /* =========================
+           DOSE
+        ========================= */
+
+        .dose-badge {
+            display: inline-block;
+
+            background: #f2f8fc;
+
+            color: #537183;
+
+            border: 1px solid #e1edf3;
+
+            border-radius: 8px;
+
+            padding: 6px 9px;
+
+            font-size: 0.66rem;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           FOOD
+        ========================= */
+
+        .food-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 4px;
+
+            color: #5b7889;
+
+            font-size: 0.66rem;
+        }
+
+        .food-badge i {
+            color: var(--primary);
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status-badge {
+            display: inline-block;
+
+            padding: 6px 9px;
+
+            border-radius: 20px;
+
+            font-size: 0.64rem;
+
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #eafaf1;
+
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: #fff0f0;
+
+            color: var(--danger);
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .action-buttons {
+            display: flex;
+
+            gap: 7px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            width: 35px;
+            height: 35px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            transition: 0.25s;
+
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background: #eaf6ff;
+
+            color: var(--primary);
+        }
+
+        .edit-btn:hover {
+            background: var(--primary);
+
+            color: white;
+
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background: #fff0f0;
+
+            color: var(--danger);
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+
+            color: white;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty-state {
+            display: none;
+
+            text-align: center;
+
+            padding: 70px 20px;
+        }
+
+        .empty-icon {
+            width: 75px;
+            height: 75px;
+
+            border-radius: 22px;
+
+            background: #eaf6ff;
+
+            color: var(--primary);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 18px;
+
+            font-size: 2rem;
+        }
+
+        .empty-state h4 {
+            color: var(--dark);
+
+            font-size: 1rem;
+
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+
+            font-size: 0.78rem;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .mini-stat {
+            background: white;
+
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            padding: 17px;
+
+            height: 100%;
+
+            box-shadow:
+                0 8px 25px rgba(0, 80, 130, 0.04);
+        }
+
+        .mini-stat-icon {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 11px;
+
+            background: #eaf6ff;
+
+            color: var(--primary);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 12px;
+        }
+
+        .mini-stat h4 {
+            color: var(--dark);
+
+            font-weight: 700;
+
+            font-size: 1.2rem;
+
+            margin: 0 0 3px;
+        }
+
+        .mini-stat p {
+            color: var(--muted);
+
+            font-size: 0.68rem;
+
+            margin: 0;
+        }
+
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-content {
+            border: none;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #edf8ff,
+                    #fafdff
+                );
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        .modal-title {
+            color: var(--dark);
+
+            font-size: 1rem;
+
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-label {
+            color: #35576e;
+
+            font-size: 0.78rem;
+
+            font-weight: 600;
+
+            margin-bottom: 7px;
+        }
+
+        .modal-input,
+        .modal-select {
+            width: 100%;
+
+            height: 45px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 10px;
+
+            padding: 8px 12px;
+
+            font-size: 0.78rem;
+
+            outline: none;
+        }
+
+        .modal-input:focus,
+        .modal-select:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px rgba(8, 127, 218, 0.08);
+        }
+
+        .modal-footer {
+            border-top:
+                1px solid #edf3f7;
+        }
+
+        .modal-save {
+            border: none;
+
+            background: var(--primary);
+
+            color: white;
+
+            border-radius: 9px;
+
+            padding: 9px 18px;
+
+            font-size: 0.76rem;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast-box {
+            position: fixed;
+
+            right: 20px;
+
+            bottom: 20px;
+
+            background: #123d5b;
+
+            color: white;
+
+            padding: 13px 18px;
+
+            border-radius: 12px;
+
+            font-size: 0.76rem;
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.16);
+
+            z-index: 3000;
+
+            animation: toastIn 0.35s ease;
+        }
+
+
+        /* =========================
+           ANIMATIONS
+        ========================= */
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @keyframes cardShow {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(25px)
+                    scale(0.99);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+        @keyframes toastIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 767px) {
+
+            .page {
+                padding-top: 30px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: none;
+            }
+
+            .add-button {
+                width: 100%;
+            }
+
+            .page-header h1 {
+                font-size: 1.65rem;
+            }
+
+            .table-header {
+                padding: 17px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .navbar-brand {
+                font-size: 0.98rem;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .profile-button {
+                width: 36px;
+
+                height: 36px;
+            }
+
+            .toast-box {
+                right: 15px;
+
+                left: 15px;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar sticky-top">
+
+    <div class="container">
+
+        <a
+            class="navbar-brand"
+            href="index.html">
+
+            <i class="bi bi-capsule-pill"></i>
+
+            Smart Medicine Reminder
+
+        </a>
+
+
+        <div class="d-flex align-items-center">
+
+            <a
+                href="index.html"
+                class="nav-link d-none d-md-block">
+
+                Home
+
+            </a>
+
+
+            <a
+                href="Add Medicine.html"
+                class="nav-link d-none d-md-block">
+
+                Add Medicine
+
+            </a>
+
+
+            <a
+                href="My Medicines.html"
+                class="nav-link active d-none d-md-block">
+
+                My Medicines
+
+            </a>
+
+
+            <a
+                href="Medicine History.html"
+                class="nav-link d-none d-md-block">
+
+                History
+
+            </a>
+
+
+            <button
+                class="profile-button"
+                onclick="goToProfile()"
+                aria-label="Profile">
+
+                Y
+
+            </button>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================
+     PAGE
+========================= -->
+
+<main class="page">
+
+    <div class="container-custom">
+
+
+        <!-- HEADER -->
+
+        <section class="page-header">
+
+            <a
+                href="index.html"
+                class="back-link">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Home
+
+            </a>
+
+
+            <h1>
+                My Medicines 💊
+            </h1>
+
+
+            <p>
+                View, edit and manage all your medicines in one place.
+            </p>
+
+        </section>
+
+
+
+        <!-- =========================
+             ACTION BAR
+        ========================= -->
+
+        <div class="action-bar">
+
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search medicine..."
+                    autocomplete="off">
+
+            </div>
+
+
+            <button
+                class="add-button"
+                onclick="addMedicine()">
+
+                <i class="bi bi-plus-lg me-1"></i>
+
+                Add Medicine
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =========================
+             STATS
+        ========================= -->
+
+        <div class="row g-3 mb-4">
+
+
+            <div class="col-4">
+
+                <div class="mini-stat">
+
+                    <div class="mini-stat-icon">
+
+                        <i class="bi bi-capsule-pill"></i>
+
+                    </div>
+
+
+                    <h4 id="totalCount">
+                        0
+                    </h4>
+
+
+                    <p>
+                        Total Medicines
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="col-4">
+
+                <div class="mini-stat">
+
+                    <div class="mini-stat-icon">
+
+                        <i class="bi bi-alarm-fill"></i>
+
+                    </div>
+
+
+                    <h4 id="activeCount">
+                        0
+                    </h4>
+
+
+                    <p>
+                        Active
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="col-4">
+
+                <div class="mini-stat">
+
+                    <div class="mini-stat-icon">
+
+                        <i class="bi bi-clock-history"></i>
+
+                    </div>
+
+
+                    <h4 id="todayCount">
+                        0
+                    </h4>
+
+
+                    <p>
+                        Today
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             TABLE
+        ========================= -->
+
+        <section class="table-card">
+
+
+            <div class="table-header">
+
+                <h3>
+                    Medicine List
+                </h3>
+
+
+                <span
+                    class="medicine-count"
+                    id="medicineCount">
+
+                    0 Medicines
+
+                </span>
+
+            </div>
+
+
+
+            <div class="table-responsive">
+
+                <table class="medicine-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Medicine
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Dose
+                            </th>
+
+                            <th>
+                                Food
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="medicineTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- EMPTY -->
+
+            <div
+                class="empty-state"
+                id="emptyState">
+
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-capsule"></i>
+
+                </div>
+
+
+                <h4>
+                    No medicines found
+                </h4>
+
+
+                <p>
+                    Add a medicine to see it here.
+                </p>
+
+
+                <button
+                    class="add-button"
+                    onclick="addMedicine()">
+
+                    <i class="bi bi-plus-lg me-1"></i>
+
+                    Add Medicine
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================
+     EDIT MODAL
+========================= -->
+
+<div
+    class="modal fade"
+    id="editModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+
+    <div class="modal-dialog modal-dialog-centered">
+
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i
+                        class="bi bi-pencil-square me-2"
+                        style="color:#087fda;">
+                    </i>
+
+                    Edit Medicine
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <input
+                    type="hidden"
+                    id="editMedicineId">
+
+
+                <div class="mb-3">
+
+                    <label
+                        class="modal-label"
+                        for="editMedicineName">
+
+                        Medicine Name
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="editMedicineName"
+                        class="modal-input">
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <label
+                        class="modal-label"
+                        for="editTime">
+
+                        Time
+
+                    </label>
+
+
+                    <input
+                        type="time"
+                        id="editTime"
+                        class="modal-input">
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <label
+                        class="modal-label"
+                        for="editDose">
+
+                        Dose
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="editDose"
+                        class="modal-input">
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <label
+                        class="modal-label"
+                        for="editStartDate">
+
+                        Start Date
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="editStartDate"
+                        class="modal-input">
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <label
+                        class="modal-label"
+                        for="editEndDate">
+
+                        End Date
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="editEndDate"
+                        class="modal-input">
+
+                </div>
+
+
+
+                <div>
+
+                    <label
+                        class="modal-label"
+                        for="editFood">
+
+                        Food Timing
+
+                    </label>
+
+
+                    <select
+                        id="editFood"
+                        class="modal-select">
+
+                        <option value="Before Food">
+                            Before Food
+                        </option>
+
+                        <option value="After Food">
+                            After Food
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="modal-footer">
+
+
+                <button
+                    type="button"
+                    class="btn btn-light btn-sm"
+                    data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="modal-save"
+                    onclick="saveEdit()">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   LOAD MEDICINES FROM LOCAL STORAGE
+========================================== */
+
+let medicines =
+    JSON.parse(
+        localStorage.getItem("medicines")
+    ) || [];
+
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const tableBody =
+    document.getElementById(
+        "medicineTableBody"
+    );
+
+
+const emptyState =
+    document.getElementById(
+        "emptyState"
+    );
+
+
+const medicineCount =
+    document.getElementById(
+        "medicineCount"
+    );
+
+
+const totalCount =
+    document.getElementById(
+        "totalCount"
+    );
+
+
+const activeCount =
+    document.getElementById(
+        "activeCount"
+    );
+
+
+const todayCount =
+    document.getElementById(
+        "todayCount"
+    );
+
+
+
+/* ==========================================
+   ADD MEDICINE
+========================================== */
+
+function addMedicine() {
+
+    window.location.href =
+        "Add Medicine.html";
+
+}
+
+
+
+/* ==========================================
+   CHECK ACTIVE MEDICINE
+========================================== */
+
+function isMedicineActive(medicine) {
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    const start =
+        medicine.startDate || "";
+
+
+    const end =
+        medicine.endDate || "";
+
+
+    if (!start && !end) {
+
+        return true;
+
+    }
+
+
+    if (start && today < start) {
+
+        return false;
+
+    }
+
+
+    if (end && today > end) {
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+
+/* ==========================================
+   CHECK TODAY'S MEDICINE
+========================================== */
+
+function isTodayMedicine(medicine) {
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    return medicine.startDate === today;
+
+}
+
+
+
+/* ==========================================
+   FORMAT TIME
+========================================== */
+
+function formatTime(time) {
+
+    if (!time) {
+
+        return "-";
+
+    }
+
+
+    const parts =
+        time.split(":");
+
+
+    if (parts.length < 2) {
+
+        return time;
+
+    }
+
+
+    let hours =
+        parseInt(
+            parts[0],
+            10
+        );
+
+
+    const minutes =
+        parts[1];
+
+
+    const ampm =
+        hours >= 12
+            ? "PM"
+            : "AM";
+
+
+    hours =
+        hours % 12 || 12;
+
+
+    return (
+        String(hours).padStart(2, "0") +
+        ":" +
+        minutes +
+        " " +
+        ampm
+    );
+
+}
+
+
+
+/* ==========================================
+   FORMAT DATE
+========================================== */
+
+function formatDate(date) {
+
+    if (!date) {
+
+        return "No date";
+
+    }
+
+
+    const parts =
+        date.split("-");
+
+
+    if (parts.length !== 3) {
+
+        return date;
+
+    }
+
+
+    return (
+        parts[2] +
+        "/" +
+        parts[1] +
+        "/" +
+        parts[0]
+    );
+
+}
+
+
+
+/* ==========================================
+   LOAD MEDICINES
+========================================== */
+
+function loadMedicines() {
+
+
+    medicines =
+        JSON.parse(
+            localStorage.getItem("medicines")
+        ) || [];
+
+
+    tableBody.innerHTML = "";
+
+
+    if (medicines.length === 0) {
+
+        emptyState.style.display =
+            "block";
+
+        updateStats();
+
+        return;
+
+    }
+
+
+    emptyState.style.display =
+        "none";
+
+
+    medicines.forEach(
+        function(medicine, index) {
+
+
+            const row =
+                document.createElement("tr");
+
+
+            row.dataset.index =
+                index;
+
+
+            row.dataset.name =
+                (medicine.name || "")
+                    .toLowerCase();
+
+
+            const active =
+                isMedicineActive(
+                    medicine
+                );
+
+
+            const statusHTML =
+                active
+
+                    ? `
+                        <span class="status-badge status-active">
+                            Active
+                        </span>
+                    `
+
+                    : `
+                        <span class="status-badge status-inactive">
+                            Inactive
+                        </span>
+                    `;
+
+
+            const foodText =
+                medicine.food ||
+                "Not specified";
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <div class="medicine-info">
+
+                        <div class="medicine-icon">
+
+                            <i class="bi bi-capsule"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="medicine-name">
+
+                                ${escapeHtml(
+                                    medicine.name ||
+                                    "Medicine"
+                                )}
+
+                            </div>
+
+
+                            <div class="medicine-subtitle">
+
+                                ${medicine.startDate
+                                    ? "From " +
+                                      formatDate(
+                                          medicine.startDate
+                                      )
+                                    : "No start date"
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td class="time-cell">
+
+                    <i class="bi bi-clock"></i>
+
+                    ${escapeHtml(
+                        formatTime(
+                            medicine.time
+                        )
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <span class="dose-badge">
+
+                        ${escapeHtml(
+                            medicine.dose ||
+                            "-"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="food-badge">
+
+                        <i class="bi bi-cup-hot"></i>
+
+                        ${escapeHtml(
+                            foodText
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    ${statusHTML}
+
+                </td>
+
+
+                <td>
+
+                    <div class="action-buttons">
+
+
+                        <button
+                            class="edit-btn"
+                            onclick="editMedicine(${index})"
+                            title="Edit medicine">
+
+                            <i class="bi bi-pencil"></i>
+
+                        </button>
+
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteMedicine(${index})"
+                            title="Delete medicine">
+
+                            <i class="bi bi-trash3"></i>
+
+                        </button>
+
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(row);
+
+        }
+    );
+
+
+    filterMedicines();
+
+}
+
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+searchInput.addEventListener(
+    "input",
+    function() {
+
+        filterMedicines();
+
+    }
+);
+
+
+
+/* ==========================================
+   FILTER MEDICINES
+========================================== */
+
+function filterMedicines() {
+
+    const search =
+        searchInput.value
+            .toLowerCase()
+            .trim();
+
+
+    const rows =
+        tableBody.querySelectorAll(
+            "tr"
+        );
+
+
+    let visibleRows = 0;
+
+
+    rows.forEach(
+        function(row) {
+
+            const name =
+                row.dataset.name || "";
+
+
+            if (
+                name.includes(search)
+            ) {
+
+                row.style.display =
+                    "";
+
+                visibleRows++;
+
+            }
+
+            else {
+
+                row.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    emptyState.style.display =
+        visibleRows === 0
+            ? "block"
+            : "none";
+
+
+    medicineCount.textContent =
+        visibleRows +
+        (
+            visibleRows === 1
+                ? " Medicine"
+                : " Medicines"
+        );
+
+
+    updateStats();
+
+}
+
+
+
+/* ==========================================
+   UPDATE STATS
+========================================== */
+
+function updateStats() {
+
+    const rows =
+        tableBody.querySelectorAll(
+            "tr"
+        );
+
+
+    totalCount.textContent =
+        medicines.length;
+
+
+    let active = 0;
+
+    let today = 0;
+
+
+    medicines.forEach(
+        function(medicine) {
+
+            if (
+                isMedicineActive(
+                    medicine
+                )
+            ) {
+
+                active++;
+
+            }
+
+
+            if (
+                isTodayMedicine(
+                    medicine
+                )
+            ) {
+
+                today++;
+
+            }
+
+        }
+    );
+
+
+    activeCount.textContent =
+        active;
+
+
+    todayCount.textContent =
+        today;
+
+
+    let visible = 0;
+
+
+    rows.forEach(
+        function(row) {
+
+            if (
+                row.style.display !==
+                "none"
+            ) {
+
+                visible++;
+
+            }
+
+        }
+    );
+
+
+    medicineCount.textContent =
+        visible +
+        (
+            visible === 1
+                ? " Medicine"
+                : " Medicines"
+        );
+
+}
+
+
+
+/* ==========================================
+   EDIT MEDICINE
+========================================== */
+
+let editModal = null;
+
+
+function editMedicine(index) {
+
+    medicines =
+        JSON.parse(
+            localStorage.getItem(
+                "medicines"
+            )
+        ) || [];
+
+
+    const medicine =
+        medicines[index];
+
+
+    if (!medicine) {
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "editMedicineId"
+    ).value = index;
+
+
+    document.getElementById(
+        "editMedicineName"
+    ).value =
+        medicine.name || "";
+
+
+    document.getElementById(
+        "editTime"
+    ).value =
+        medicine.time || "";
+
+
+    document.getElementById(
+        "editDose"
+    ).value =
+        medicine.dose || "";
+
+
+    document.getElementById(
+        "editStartDate"
+    ).value =
+        medicine.startDate || "";
+
+
+    document.getElementById(
+        "editEndDate"
+    ).value =
+        medicine.endDate || "";
+
+
+    document.getElementById(
+        "editFood"
+    ).value =
+        medicine.food ||
+        "After Food";
+
+
+    if (!editModal) {
+
+        editModal =
+            new bootstrap.Modal(
+                document.getElementById(
+                    "editModal"
+                )
+            );
+
+    }
+
+
+    editModal.show();
+
+}
+
+
+
+/* ==========================================
+   SAVE EDIT
+========================================== */
+
+function saveEdit() {
+
+
+    const index =
+        parseInt(
+            document.getElementById(
+                "editMedicineId"
+            ).value,
+            10
+        );
+
+
+    const name =
+        document.getElementById(
+            "editMedicineName"
+        ).value.trim();
+
+
+    const time =
+        document.getElementById(
+            "editTime"
+        ).value;
+
+
+    const dose =
+        document.getElementById(
+            "editDose"
+        ).value.trim();
+
+
+    const startDate =
+        document.getElementById(
+            "editStartDate"
+        ).value;
+
+
+    const endDate =
+        document.getElementById(
+            "editEndDate"
+        ).value;
+
+
+    const food =
+        document.getElementById(
+            "editFood"
+        ).value;
+
+
+    if (
+        !name ||
+        !time ||
+        !dose ||
+        !startDate ||
+        !endDate ||
+        !food
+    ) {
+
+        showToast(
+            "Please fill all fields."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        endDate < startDate
+    ) {
+
+        showToast(
+            "End date cannot be before start date."
+        );
+
+        return;
+
+    }
+
+
+    medicines =
+        JSON.parse(
+            localStorage.getItem(
+                "medicines"
+            )
+        ) || [];
+
+
+    if (!medicines[index]) {
+
+        return;
+
+    }
+
+
+    medicines[index] = {
+
+        ...medicines[index],
+
+        name:
+            name,
+
+        dose:
+            dose,
+
+        time:
+            time,
+
+        startDate:
+            startDate,
+
+        endDate:
+            endDate,
+
+        food:
+            food
+
+    };
+
+
+    localStorage.setItem(
+        "medicines",
+        JSON.stringify(
+            medicines
+        )
+    );
+
+
+    loadMedicines();
+
+
+    if (editModal) {
+
+        editModal.hide();
+
+    }
+
+
+    showToast(
+        "Medicine updated successfully ✅"
+    );
+
+}
+
+
+
+/* ==========================================
+   DELETE MEDICINE
+========================================== */
+
+function deleteMedicine(index) {
+
+
+    medicines =
+        JSON.parse(
+            localStorage.getItem(
+                "medicines"
+            )
+        ) || [];
+
+
+    const medicine =
+        medicines[index];
+
+
+    if (!medicine) {
+
+        return;
+
+    }
+
+
+    const name =
+        medicine.name ||
+        "Medicine";
+
+
+    const confirmed =
+        confirm(
+            `Delete "${name}" from your medicine list?`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    medicines.splice(
+        index,
+        1
+    );
+
+
+    localStorage.setItem(
+        "medicines",
+        JSON.stringify(
+            medicines
+        )
+    );
+
+
+    loadMedicines();
+
+
+    showToast(
+        `${name} deleted successfully.`
+    );
+
+}
+
+
+
+/* ==========================================
+   PROFILE
+========================================== */
+
+function goToProfile() {
+    window.location.href = "User profile.html";
+}
+
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(message) {
+
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+
+    toast.className =
+        "toast-box";
+
+
+    toast.innerHTML =
+        `
+            <i class="bi bi-check-circle-fill me-2"></i>
+            ${escapeHtml(message)}
+        `;
+
+
+    document.body.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        function() {
+
+            toast.style.opacity =
+                "0";
+
+            toast.style.transform =
+                "translateY(15px)";
+
+            toast.style.transition =
+                "all .3s ease";
+
+
+            setTimeout(
+                function() {
+
+                    toast.remove();
+
+                },
+                300
+            );
+
+        },
+        2200
+    );
+
+}
+
+
+
+/* ==========================================
+   SECURITY
+========================================== */
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        String(value);
+
+
+    return div.innerHTML;
+
+}
+
+
+
+/* ==========================================
+   INITIAL LOAD
+========================================== */
+
+loadMedicines();
+
+
+</script>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Medicine | Smart Medicine Reminder</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Poppins", sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(20,167,232,.12),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 90% 90%,
+                    rgba(8,127,218,.10),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f5fbff,
+                    #eaf7ff
+                );
+
+            color: #183b56;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: rgba(255,255,255,.95);
+            backdrop-filter: blur(10px);
+            box-shadow:
+                0 5px 25px rgba(0,90,150,.07);
+        }
+
+        .navbar-brand {
+            color: #087fda !important;
+            font-weight: 700;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #087fda;
+            font-size: .85rem;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: #066bb7;
+        }
+
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            min-height: calc(100vh - 70px);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 45px 15px;
+        }
+
+        .medicine-card {
+            width: 100%;
+            max-width: 720px;
+
+            background: rgba(255,255,255,.97);
+
+            border-radius: 28px;
+
+            box-shadow:
+                0 25px 70px rgba(0,90,150,.13);
+
+            overflow: hidden;
+
+            animation: cardShow .7s ease;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .card-header-custom {
+            text-align: center;
+
+            padding:
+                35px 25px 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #edf8ff,
+                    #fafdff
+                );
+
+            border-bottom:
+                1px solid #e5f0f5;
+        }
+
+        .medicine-icon {
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #087fda,
+                    #14a7e8
+                );
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 2rem;
+
+            box-shadow:
+                0 12px 30px
+                rgba(8,127,218,.22);
+
+            animation:
+                floatIcon
+                3s
+                ease-in-out
+                infinite;
+        }
+
+        .card-header-custom h1 {
+            margin: 0;
+
+            color: #123d5b;
+
+            font-size: 1.8rem;
+
+            font-weight: 700;
+        }
+
+        .card-header-custom p {
+            margin: 8px 0 0;
+
+            color: #718898;
+
+            font-size: .85rem;
+        }
+
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-body {
+            padding: 35px;
+        }
+
+        .form-label {
+            color: #35576e;
+
+            font-size: .83rem;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #087fda;
+
+            z-index: 2;
+        }
+
+        .form-control,
+        .form-select {
+            height: 52px;
+
+            border:
+                1.5px solid
+                #dceaf2;
+
+            border-radius: 13px;
+
+            background: #fbfdff;
+
+            padding-left: 44px;
+
+            color: #183b56;
+
+            font-size: .87rem;
+
+            transition: .3s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #087fda;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(8,127,218,.09);
+
+            background: white;
+        }
+
+
+        /* =========================
+           FOOD OPTIONS
+        ========================= */
+
+        .food-title {
+            font-size: .83rem;
+
+            font-weight: 600;
+
+            color: #35576e;
+
+            margin-bottom: 10px;
+        }
+
+        .food-options {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .food-option input {
+            display: none;
+        }
+
+        .food-card {
+            border:
+                1.5px solid
+                #dceaf2;
+
+            border-radius: 13px;
+
+            padding: 15px;
+
+            background: #fbfdff;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .food-card:hover {
+            border-color: #9bd2ef;
+
+            transform:
+                translateY(-2px);
+        }
+
+        .food-option input:checked + .food-card {
+            border-color: #087fda;
+
+            background: #edf8ff;
+
+            box-shadow:
+                0 8px 20px
+                rgba(8,127,218,.08);
+        }
+
+        .radio {
+            width: 19px;
+            height: 19px;
+
+            border:
+                2px solid
+                #aabec9;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+        }
+
+        .radio::after {
+            content: "";
+
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #087fda;
+
+            transform: scale(0);
+
+            transition: .2s;
+        }
+
+        .food-option input:checked
+        + .food-card
+        .radio::after {
+            transform: scale(1);
+        }
+
+        .food-card i {
+            color: #087fda;
+
+            font-size: 1.15rem;
+        }
+
+        .food-text strong {
+            display: block;
+
+            font-size: .8rem;
+        }
+
+        .food-text small {
+            color: #718898;
+
+            font-size: .67rem;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .button-row {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 30px;
+
+            padding-top: 25px;
+
+            border-top:
+                1px solid #edf3f6;
+        }
+
+        .cancel-btn,
+        .save-btn {
+            flex: 1;
+
+            height: 50px;
+
+            border-radius: 12px;
+
+            font-weight: 600;
+
+            font-size: .85rem;
+
+            transition: .3s;
+        }
+
+        .cancel-btn {
+            border:
+                1px solid #d9e6ed;
+
+            background: white;
+
+            color: #607b8c;
+        }
+
+        .cancel-btn:hover {
+            background: #f5f9fb;
+        }
+
+        .save-btn {
+            border: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #087fda,
+                    #14a7e8
+                );
+
+            color: white;
+
+            box-shadow:
+                0 10px 25px
+                rgba(8,127,218,.20);
+        }
+
+        .save-btn:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 15px 30px
+                rgba(8,127,218,.28);
+        }
+
+        .save-btn:disabled {
+            opacity: .8;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =========================
+           MESSAGES
+        ========================= */
+
+        .message {
+            display: none;
+
+            padding: 12px 15px;
+
+            border-radius: 10px;
+
+            margin-bottom: 20px;
+
+            font-size: .78rem;
+        }
+
+        .error {
+            background: #fff1f1;
+
+            border:
+                1px solid #ffd0d0;
+
+            color: #c82f2f;
+        }
+
+        .success {
+            background: #ecfff4;
+
+            border:
+                1px solid #c5efd6;
+
+            color: #197643;
+        }
+
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast-box {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+
+            background: #123d5b;
+
+            color: white;
+
+            padding: 13px 18px;
+
+            border-radius: 12px;
+
+            font-size: .78rem;
+
+            box-shadow:
+                0 15px 35px
+                rgba(0,0,0,.16);
+
+            z-index: 1000;
+
+            animation:
+                toastIn
+                .4s
+                ease;
+        }
+
+
+        /* =========================
+           ANIMATIONS
+        ========================= */
+
+        @keyframes cardShow {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(30px)
+                    scale(.98);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+        @keyframes floatIcon {
+
+            0%, 100% {
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateY(-7px);
+            }
+
+        }
+
+        @keyframes toastIn {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .page {
+                padding:
+                    25px 12px;
+            }
+
+            .form-body {
+                padding:
+                    25px 20px;
+            }
+
+            .card-header-custom {
+                padding:
+                    30px 20px 22px;
+            }
+
+            .card-header-custom h1 {
+                font-size: 1.5rem;
+            }
+
+            .food-options {
+                grid-template-columns: 1fr;
+            }
+
+            .button-row {
+                flex-direction:
+                    column-reverse;
+            }
+
+            .cancel-btn,
+            .save-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <nav class="navbar navbar-expand-lg">
+
+        <div class="container">
+
+            <a
+                class="navbar-brand"
+                href="Dashboard.html"
+            >
+
+                <i class="bi bi-capsule-pill"></i>
+
+                Smart Medicine Reminder
+
+            </a>
+
+
+            <a
+                href="Dashboard.html"
+                class="back-btn"
+            >
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =========================
+         PAGE
+    ========================= -->
+
+    <main class="page">
+
+        <div class="medicine-card">
+
+
+            <!-- Header -->
+
+            <div class="card-header-custom">
+
+                <div class="medicine-icon">
+
+                    <i class="bi bi-capsule-pill"></i>
+
+                </div>
+
+
+                <h1>
+                    Add Medicine
+                </h1>
+
+
+                <p>
+                    Add your medicine details and create a reminder.
+                </p>
+
+            </div>
+
+
+
+            <!-- Form -->
+
+            <div class="form-body">
+
+
+                <div
+                    id="errorMessage"
+                    class="message error">
+                </div>
+
+
+                <div
+                    id="successMessage"
+                    class="message success">
+                </div>
+
+
+
+                <form
+                    id="medicineForm"
+                    novalidate>
+
+
+                    <!-- Medicine Name -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="medicineName"
+                            class="form-label"
+                        >
+                            Medicine Name
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="bi bi-capsule input-icon">
+                            </i>
+
+
+                            <input
+                                type="text"
+                                id="medicineName"
+                                class="form-control"
+                                placeholder="Enter medicine name"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Dose -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="dose"
+                            class="form-label"
+                        >
+                            Dose
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="bi bi-prescription2 input-icon">
+                            </i>
+
+
+                            <input
+                                type="text"
+                                id="dose"
+                                class="form-control"
+                                placeholder="e.g. 1 Tablet"
+                                maxlength="50"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Time -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="medicineTime"
+                            class="form-label"
+                        >
+                            Time
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                class="bi bi-clock input-icon">
+                            </i>
+
+
+                            <select
+                                id="medicineTime"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select time
+                                </option>
+
+                                <option value="06:00 AM">
+                                    06:00 AM
+                                </option>
+
+                                <option value="07:00 AM">
+                                    07:00 AM
+                                </option>
+
+                                <option value="08:00 AM">
+                                    08:00 AM
+                                </option>
+
+                                <option value="09:00 AM">
+                                    09:00 AM
+                                </option>
+
+                                <option value="10:00 AM">
+                                    10:00 AM
+                                </option>
+
+                                <option value="11:00 AM">
+                                    11:00 AM
+                                </option>
+
+                                <option value="12:00 PM">
+                                    12:00 PM
+                                </option>
+
+                                <option value="01:00 PM">
+                                    01:00 PM
+                                </option>
+
+                                <option value="02:00 PM">
+                                    02:00 PM
+                                </option>
+
+                                <option value="03:00 PM">
+                                    03:00 PM
+                                </option>
+
+                                <option value="04:00 PM">
+                                    04:00 PM
+                                </option>
+
+                                <option value="05:00 PM">
+                                    05:00 PM
+                                </option>
+
+                                <option value="06:00 PM">
+                                    06:00 PM
+                                </option>
+
+                                <option value="07:00 PM">
+                                    07:00 PM
+                                </option>
+
+                                <option value="08:00 PM">
+                                    08:00 PM
+                                </option>
+
+                                <option value="09:00 PM">
+                                    09:00 PM
+                                </option>
+
+                                <option value="10:00 PM">
+                                    10:00 PM
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Dates -->
+
+                    <div class="row">
+
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label
+                                    for="startDate"
+                                    class="form-label"
+                                >
+                                    Start Date
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <i
+                                        class="bi bi-calendar-event input-icon">
+                                    </i>
+
+
+                                    <input
+                                        type="date"
+                                        id="startDate"
+                                        class="form-control"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label
+                                    for="endDate"
+                                    class="form-label"
+                                >
+                                    End Date
+                                </label>
+
+
+                                <div class="input-wrapper">
+
+                                    <i
+                                        class="bi bi-calendar-check input-icon">
+                                    </i>
+
+
+                                    <input
+                                        type="date"
+                                        id="endDate"
+                                        class="form-control"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Food -->
+
+                    <div class="form-group">
+
+                        <div class="food-title">
+                            Medicine Instructions
+                        </div>
+
+
+                        <div class="food-options">
+
+
+                            <!-- Before Food -->
+
+                            <label class="food-option">
+
+                                <input
+                                    type="radio"
+                                    name="food"
+                                    value="Before Food"
+                                    required
+                                >
+
+
+                                <div class="food-card">
+
+                                    <div class="radio"></div>
+
+
+                                    <i
+                                        class="bi bi-egg-fried">
+                                    </i>
+
+
+                                    <div class="food-text">
+
+                                        <strong>
+                                            Before Food
+                                        </strong>
+
+                                        <small>
+                                            Take before eating
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </label>
+
+
+
+                            <!-- After Food -->
+
+                            <label class="food-option">
+
+                                <input
+                                    type="radio"
+                                    name="food"
+                                    value="After Food"
+                                >
+
+
+                                <div class="food-card">
+
+                                    <div class="radio"></div>
+
+
+                                    <i
+                                        class="bi bi-cup-hot">
+                                    </i>
+
+
+                                    <div class="food-text">
+
+                                        <strong>
+                                            After Food
+                                        </strong>
+
+                                        <small>
+                                            Take after eating
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </label>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Buttons -->
+
+                    <div class="button-row">
+
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="cancelMedicine()"
+                        >
+
+                            Cancel
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="save-btn"
+                        >
+
+                            <i
+                                class="bi bi-check-circle me-2">
+                            </i>
+
+                            Save Medicine
+
+                        </button>
+
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <script>
+
+
+        /* =========================
+           ELEMENTS
+        ========================= */
+
+        const form =
+            document.getElementById(
+                "medicineForm"
+            );
+
+        const medicineName =
+            document.getElementById(
+                "medicineName"
+            );
+
+        const dose =
+            document.getElementById(
+                "dose"
+            );
+
+        const medicineTime =
+            document.getElementById(
+                "medicineTime"
+            );
+
+        const startDate =
+            document.getElementById(
+                "startDate"
+            );
+
+        const endDate =
+            document.getElementById(
+                "endDate"
+            );
+
+        const errorMessage =
+            document.getElementById(
+                "errorMessage"
+            );
+
+        const successMessage =
+            document.getElementById(
+                "successMessage"
+            );
+
+
+        /* =========================
+           TODAY'S DATE
+        ========================= */
+
+        const today =
+            new Date();
+
+        const todayString =
+            new Date(
+                today.getTime() -
+                today.getTimezoneOffset() *
+                60000
+            )
+            .toISOString()
+            .split("T")[0];
+
+
+        startDate.min =
+            todayString;
+
+        endDate.min =
+            todayString;
+
+        startDate.value =
+            todayString;
+
+
+
+        /* =========================
+           START DATE CHANGE
+        ========================= */
+
+        startDate.addEventListener(
+            "change",
+            function () {
+
+                endDate.min =
+                    startDate.value;
+
+
+                if (
+                    endDate.value &&
+                    endDate.value <
+                    startDate.value
+                ) {
+
+                    endDate.value = "";
+
+                }
+
+            }
+        );
+
+
+
+        /* =========================
+           ERROR MESSAGE
+        ========================= */
+
+        function showError(message) {
+
+            errorMessage.textContent =
+                message;
+
+            errorMessage.style.display =
+                "block";
+
+            successMessage.style.display =
+                "none";
+
+        }
+
+
+
+        /* =========================
+           FORM SUBMIT
+        ========================= */
+
+        form.addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                errorMessage.style.display =
+                    "none";
+
+                successMessage.style.display =
+                    "none";
+
+
+                const name =
+                    medicineName.value.trim();
+
+                const doseValue =
+                    dose.value.trim();
+
+                const time =
+                    medicineTime.value;
+
+                const start =
+                    startDate.value;
+
+                const end =
+                    endDate.value;
+
+                const food =
+                    document.querySelector(
+                        'input[name="food"]:checked'
+                    );
+
+
+
+                /* =========================
+                   VALIDATION
+                ========================= */
+
+                if (
+                    name.length < 2
+                ) {
+
+                    showError(
+                        "Please enter a valid medicine name."
+                    );
+
+                    medicineName.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    doseValue.length === 0
+                ) {
+
+                    showError(
+                        "Please enter the medicine dose."
+                    );
+
+                    dose.focus();
+
+                    return;
+
+                }
+
+
+                if (!time) {
+
+                    showError(
+                        "Please select a medicine time."
+                    );
+
+                    medicineTime.focus();
+
+                    return;
+
+                }
+
+
+                if (!start) {
+
+                    showError(
+                        "Please select the start date."
+                    );
+
+                    startDate.focus();
+
+                    return;
+
+                }
+
+
+                if (!end) {
+
+                    showError(
+                        "Please select the end date."
+                    );
+
+                    endDate.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    end < start
+                ) {
+
+                    showError(
+                        "End date cannot be before start date."
+                    );
+
+                    endDate.focus();
+
+                    return;
+
+                }
+
+
+                if (!food) {
+
+                    showError(
+                        "Please select Before Food or After Food."
+                    );
+
+                    return;
+
+                }
+
+
+
+                /* =========================
+                   SAVE BUTTON
+                ========================= */
+
+                const button =
+                    form.querySelector(
+                        ".save-btn"
+                    );
+
+
+                button.disabled =
+                    true;
+
+
+                button.innerHTML = `
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Saving...
+                `;
+
+
+
+                /* =========================
+                   MEDICINE OBJECT
+                ========================= */
+
+                const medicine = {
+
+                    name: name,
+
+                    dose: doseValue,
+
+                    time: time,
+
+                    startDate: start,
+
+                    endDate: end,
+
+                    food: food.value
+
+                };
+
+
+
+                /* =========================
+                   LOCAL STORAGE
+                ========================= */
+
+                let medicines =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "medicines"
+                        )
+                    ) || [];
+
+
+                medicines.push(
+                    medicine
+                );
+
+
+                localStorage.setItem(
+                    "medicines",
+                    JSON.stringify(
+                        medicines
+                    )
+                );
+
+
+
+                /* =========================
+                   SUCCESS
+                ========================= */
+
+                setTimeout(
+                    function() {
+
+
+                        successMessage.textContent =
+                            `${name} added successfully!`;
+
+
+                        successMessage.style.display =
+                            "block";
+
+
+                        button.disabled =
+                            false;
+
+
+                        button.innerHTML = `
+                            <i class="bi bi-check-circle me-2"></i>
+                            Save Medicine
+                        `;
+
+
+                        showToast(
+                            "Medicine saved successfully ✅"
+                        );
+
+
+
+                        /* =========================
+                           GO TO SET REMINDER
+                        ========================= */
+
+                        setTimeout(
+                            function() {
+
+                                window.location.href =
+                                    "Set Reminder.html";
+
+                            },
+                            1200
+                        );
+
+
+                    },
+                    700
+                );
+
+            }
+        );
+
+
+
+        /* =========================
+           CANCEL
+        ========================= */
+
+        function cancelMedicine() {
+
+            const confirmCancel =
+                confirm(
+                    "Are you sure you want to cancel?"
+                );
+
+
+            if (
+                confirmCancel
+            ) {
+
+                window.location.href =
+                    "Dashboard.html";
+
+            }
+
+        }
+
+
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        function showToast(message) {
+
+            const toast =
+                document.createElement(
+                    "div"
+                );
+
+
+            toast.className =
+                "toast-box";
+
+
+            toast.innerHTML =
+                `
+                <i class="bi bi-check-circle-fill me-2"></i>
+                ${message}
+                `;
+
+
+            document.body.appendChild(
+                toast
+            );
+
+
+            setTimeout(
+                function() {
+
+                    toast.style.opacity =
+                        "0";
+
+                    toast.style.transition =
+                        "all .3s ease";
+
+
+                    setTimeout(
+                        function() {
+
+                            toast.remove();
+
+                        },
+                        300
+                    );
+
+                },
+                2200
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

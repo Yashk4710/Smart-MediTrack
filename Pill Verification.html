@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pill Verification | Smart Medicine Reminder</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #087fda;
+            --secondary: #14a7e8;
+            --dark: #123d5b;
+            --text: #183b56;
+            --muted: #718898;
+            --light: #f5faff;
+            --border: #dcebf3;
+            --success: #198754;
+            --danger: #dc3545;
+            --warning: #f59f00;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Poppins", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(
+                    circle at 8% 10%,
+                    rgba(20, 167, 232, 0.13),
+                    transparent 26%
+                ),
+                radial-gradient(
+                    circle at 95% 90%,
+                    rgba(8, 127, 218, 0.09),
+                    transparent 25%
+                ),
+                var(--light);
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e3eef4;
+            box-shadow: 0 5px 25px rgba(0, 80, 130, 0.05);
+            padding: 14px 0;
+        }
+
+        .navbar-brand {
+            color: var(--primary) !important;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: #5d7889 !important;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 15px;
+            transition: 0.25s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary) !important;
+        }
+
+        .profile-button {
+            width: 39px;
+            height: 39px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+            color: white;
+            font-weight: 700;
+            margin-left: 12px;
+            cursor: pointer;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            min-height: calc(100vh - 70px);
+            padding: 42px 15px 60px;
+        }
+
+        .container-custom {
+            width: 100%;
+            max-width: 1080px;
+            margin: auto;
+        }
+
+        .page-header {
+            animation: fadeUp 0.7s ease;
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            transition: 0.25s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+        }
+
+        .page-header h1 {
+            color: var(--dark);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 0.86rem;
+        }
+
+        /* =========================
+           MAIN CARD
+        ========================= */
+
+        .verification-card {
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            box-shadow: 0 20px 65px rgba(0, 85, 140, 0.08);
+            overflow: hidden;
+            animation: cardShow 0.8s ease;
+        }
+
+        .card-header-custom {
+            padding: 30px;
+            background: linear-gradient(
+                135deg,
+                #edf8ff,
+                #fafdff
+            );
+            border-bottom: 1px solid #e5f0f5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 17px;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 25px rgba(8, 127, 218, 0.20);
+        }
+
+        .card-header-custom h2 {
+            margin: 0;
+            color: var(--dark);
+            font-size: 1.08rem;
+            font-weight: 700;
+        }
+
+        .card-header-custom p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 0.74rem;
+        }
+
+        .card-body-custom {
+            padding: 35px;
+        }
+
+        /* =========================
+           UPLOAD AREA
+        ========================= */
+
+        .upload-area {
+            border: 2px dashed #b9dced;
+            background: #f8fcff;
+            border-radius: 20px;
+            padding: 45px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: #eef9ff;
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            width: 74px;
+            height: 74px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 17px;
+            background: #e6f6ff;
+            color: var(--primary);
+            font-size: 2rem;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        .upload-area h3 {
+            color: var(--dark);
+            font-size: 1.02rem;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .upload-area p {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-bottom: 18px;
+        }
+
+        .choose-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 17px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.76rem;
+            font-weight: 600;
+            border: none;
+            transition: 0.3s;
+        }
+
+        .choose-button:hover {
+            background: #066bb7;
+            transform: translateY(-2px);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 15px;
+            color: #557284;
+            font-size: 0.73rem;
+            display: none;
+        }
+
+        /* =========================
+           IMAGE PREVIEW
+        ========================= */
+
+        .preview-container {
+            display: none;
+            margin-top: 20px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #fbfdff;
+        }
+
+        .preview-header {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eaf1f5;
+        }
+
+        .preview-header span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .remove-image {
+            border: none;
+            background: #fff0f0;
+            color: var(--danger);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+        }
+
+        .preview-image-wrapper {
+            height: 310px;
+            background: #f2f8fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* =========================
+           VERIFY BUTTON
+        ========================= */
+
+        .verify-row {
+            margin-top: 22px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .verify-button {
+            flex: 1;
+            height: 49px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+            color: white;
+            font-weight: 600;
+            font-size: 0.83rem;
+            box-shadow: 0 10px 25px rgba(8, 127, 218, 0.18);
+            transition: 0.3s;
+        }
+
+        .verify-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(8, 127, 218, 0.26);
+        }
+
+        .verify-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reset-button {
+            width: 130px;
+            height: 49px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            color: #607b8c;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .reset-button:hover {
+            background: #f5f9fb;
+        }
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result-card {
+            margin-top: 25px;
+            border-radius: 20px;
+            border: 1px solid #ccefd8;
+            background: linear-gradient(
+                135deg,
+                #f1fff6,
+                #fbfffd
+            );
+            padding: 25px;
+            display: none;
+            animation: resultShow 0.55s ease;
+        }
+
+        .result-card.warning {
+            border-color: #ffe2a8;
+            background: linear-gradient(
+                135deg,
+                #fffaf0,
+                #fffefd
+            );
+        }
+
+        .result-top {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 22px;
+        }
+
+        .result-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: #ddf7e8;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.45rem;
+        }
+
+        .result-card.warning .result-icon {
+            background: #fff0c9;
+            color: var(--warning);
+        }
+
+        .result-label {
+            color: #688073;
+            font-size: 0.69rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .result-title {
+            color: var(--dark);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        .detected-medicine {
+            background: white;
+            border: 1px solid #dcefe3;
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .result-card.warning .detected-medicine {
+            border-color: #f4dfb0;
+        }
+
+        .medicine-result-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .medicine-result-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #e9f8ee;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-card.warning .medicine-result-icon {
+            background: #fff4d8;
+            color: var(--warning);
+        }
+
+        .medicine-result-name {
+            color: var(--dark);
+            font-size: 0.87rem;
+            font-weight: 700;
+        }
+
+        .medicine-result-subtitle {
+            color: var(--muted);
+            font-size: 0.68rem;
+            margin-top: 3px;
+        }
+
+        .correct-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 10px;
+            border-radius: 20px;
+            background: #ddf7e8;
+            color: #187743;
+            font-size: 0.64rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .result-card.warning .correct-badge {
+            background: #fff0c9;
+            color: #9a6800;
+        }
+
+        /* =========================
+           INFO
+        ========================= */
+
+        .info-box {
+            margin-top: 22px;
+            padding: 15px;
+            border-radius: 13px;
+            background: #f7fbfd;
+            border: 1px solid #e4eef3;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-box i {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-top: 1px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.68rem;
+            line-height: 1.65;
+        }
+
+        /* =========================
+           LOADER
+        ========================= */
+
+        .verification-loader {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            animation: fadeUp 0.3s ease;
+        }
+
+        .loader-circle {
+            width: 52px;
+            height: 52px;
+            border: 4px solid #d9edf7;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 13px;
+        }
+
+        .loader-text {
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error-message {
+            display: none;
+            padding: 11px 14px;
+            border-radius: 10px;
+            background: #fff1f1;
+            border: 1px solid #ffd0d0;
+            color: #c72d2d;
+            font-size: 0.75rem;
+            margin-bottom: 18px;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast-box {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #123d5b;
+            color: white;
+            border-radius: 12px;
+            padding: 13px 18px;
+            font-size: 0.75rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            z-index: 3000;
+            animation: toastIn 0.35s ease;
+        }
+
+        /* =========================
+           ANIMATIONS
+        ========================= */
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardShow {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.99);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes resultShow {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 767px) {
+
+            .page {
+                padding-top: 30px;
+            }
+
+            .card-header-custom,
+            .card-body-custom {
+                padding: 25px 20px;
+            }
+
+            .page-header h1 {
+                font-size: 1.65rem;
+            }
+
+            .verify-row {
+                flex-direction: column;
+            }
+
+            .reset-button {
+                width: 100%;
+            }
+
+            .detected-medicine {
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .navbar-brand {
+                font-size: 0.98rem;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .profile-button {
+                width: 36px;
+                height: 36px;
+            }
+
+            .preview-image-wrapper {
+                height: 230px;
+            }
+
+            .correct-badge {
+                font-size: 0.58rem;
+                padding: 6px 8px;
+            }
+
+            .toast-box {
+                left: 15px;
+                right: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <nav class="navbar sticky-top">
+
+        <div class="container">
+
+            <a
+                class="navbar-brand"
+                href="Dashboard.html"
+            >
+                <i class="bi bi-capsule-pill"></i>
+                Smart Medicine Reminder
+            </a>
+
+            <div class="d-flex align-items-center">
+
+                <a
+                    href="Dashboard.html"
+                    class="nav-link d-none d-md-block"
+                >
+                    Dashboard
+                </a>
+
+                <a
+                    href="Add Medicine.html"
+                    class="nav-link d-none d-md-block"
+                >
+                    Add Medicine
+                </a>
+
+                <a
+                    href="My Medicines.html"
+                    class="nav-link d-none d-md-block"
+                >
+                    Medicines
+                </a>
+
+                <a
+                    href="pill verification.html"
+                    class="nav-link active d-none d-md-block"
+                >
+                    Verification
+                </a>
+
+                <button
+                    class="profile-button"
+                    id="profileButton"
+                    onclick="goToProfile()"
+                >
+                    U
+                </button>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         PAGE
+    ========================= -->
+
+    <main class="page">
+
+        <div class="container-custom">
+
+            <!-- Header -->
+
+            <section class="page-header">
+
+                <a
+                    href="Dashboard.html"
+                    class="back-link"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+
+                <h1>
+                    Pill Verification 📷
+                </h1>
+
+                <p>
+                    Upload a medicine image for an assistive verification check.
+                </p>
+
+            </section>
+
+
+            <!-- =========================
+                 CARD
+            ========================= -->
+
+            <section class="verification-card">
+
+                <div class="card-header-custom">
+
+                    <div class="header-icon">
+                        <i class="bi bi-camera-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Verify Your Medicine
+                        </h2>
+
+                        <p>
+                            Upload a clear image of the medicine package or pill.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body-custom">
+
+                    <!-- Error -->
+
+                    <div
+                        id="errorMessage"
+                        class="error-message"
+                    ></div>
+
+
+                    <!-- Upload -->
+
+                    <div
+                        class="upload-area"
+                        id="uploadArea"
+                    >
+
+                        <div class="upload-icon">
+                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                        </div>
+
+                        <h3>
+                            Upload Medicine Image
+                        </h3>
+
+                        <p>
+                            JPG, JPEG, PNG or WEBP · Maximum 5 MB
+                        </p>
+
+                        <button
+                            type="button"
+                            class="choose-button"
+                            id="chooseButton"
+                        >
+                            <i class="bi bi-image"></i>
+                            Choose File
+                        </button>
+
+                        <input
+                            type="file"
+                            id="fileInput"
+                            accept="image/png,image/jpeg,image/jpg,image/webp"
+                        >
+
+                        <div
+                            class="file-name"
+                            id="fileName"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- Preview -->
+
+                    <div
+                        class="preview-container"
+                        id="previewContainer"
+                    >
+
+                        <div class="preview-header">
+
+                            <span>
+                                Image Preview
+                            </span>
+
+                            <button
+                                type="button"
+                                class="remove-image"
+                                onclick="resetVerification()"
+                                title="Remove image"
+                            >
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+
+                        </div>
+
+                        <div class="preview-image-wrapper">
+
+                            <img
+                                id="previewImage"
+                                class="preview-image"
+                                alt="Medicine preview"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Verify -->
+
+                    <div class="verify-row">
+
+                        <button
+                            type="button"
+                            class="verify-button"
+                            id="verifyButton"
+                            onclick="verifyMedicine()"
+                        >
+                            <i class="bi bi-shield-check me-2"></i>
+                            Verify Medicine
+                        </button>
+
+                        <button
+                            type="button"
+                            class="reset-button"
+                            onclick="resetVerification()"
+                        >
+                            <i class="bi bi-arrow-counterclockwise me-1"></i>
+                            Reset
+                        </button>
+
+                    </div>
+
+
+                    <!-- Loader -->
+
+                    <div
+                        class="verification-loader"
+                        id="verificationLoader"
+                    >
+
+                        <div class="loader-circle"></div>
+
+                        <div class="loader-text">
+                            Checking image...
+                        </div>
+
+                    </div>
+
+
+                    <!-- Result -->
+
+                    <div
+                        class="result-card"
+                        id="resultCard"
+                    >
+
+                        <div class="result-top">
+
+                            <div class="result-icon">
+                                <i
+                                    id="resultIcon"
+                                    class="bi bi-check-circle-fill"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <div
+                                    id="resultLabel"
+                                    class="result-label"
+                                >
+                                    Verification Result
+                                </div>
+
+                                <div
+                                    id="resultTitle"
+                                    class="result-title"
+                                >
+                                    Medicine Detected
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="detected-medicine">
+
+                            <div class="medicine-result-info">
+
+                                <div class="medicine-result-icon">
+
+                                    <i
+                                        id="medicineResultIcon"
+                                        class="bi bi-capsule-pill"
+                                    ></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div
+                                        id="medicineResultName"
+                                        class="medicine-result-name"
+                                    >
+                                        —
+                                    </div>
+
+                                    <div
+                                        id="medicineResultSubtitle"
+                                        class="medicine-result-subtitle"
+                                    >
+                                        —
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                id="resultBadge"
+                                class="correct-badge"
+                            >
+                                <i class="bi bi-check-lg"></i>
+                                Match Found
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Information -->
+
+                    <div class="info-box">
+
+                        <i class="bi bi-info-circle-fill"></i>
+
+                        <p>
+                            This verification feature is an assistive check only.
+                            The current version does not use an AI image-recognition
+                            model. Always confirm your medicine with the packaging,
+                            prescription or a qualified healthcare professional.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        /* =========================
+           ELEMENTS
+        ========================= */
+
+        const uploadArea =
+            document.getElementById("uploadArea");
+
+        const chooseButton =
+            document.getElementById("chooseButton");
+
+        const fileInput =
+            document.getElementById("fileInput");
+
+        const fileName =
+            document.getElementById("fileName");
+
+        const previewContainer =
+            document.getElementById("previewContainer");
+
+        const previewImage =
+            document.getElementById("previewImage");
+
+        const verifyButton =
+            document.getElementById("verifyButton");
+
+        const resultCard =
+            document.getElementById("resultCard");
+
+        const verificationLoader =
+            document.getElementById("verificationLoader");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const resultTitle =
+            document.getElementById("resultTitle");
+
+        const resultLabel =
+            document.getElementById("resultLabel");
+
+        const resultIcon =
+            document.getElementById("resultIcon");
+
+        const medicineResultIcon =
+            document.getElementById("medicineResultIcon");
+
+        const medicineResultName =
+            document.getElementById("medicineResultName");
+
+        const medicineResultSubtitle =
+            document.getElementById("medicineResultSubtitle");
+
+        const resultBadge =
+            document.getElementById("resultBadge");
+
+        const profileButton =
+            document.getElementById("profileButton");
+
+
+        let selectedFile = null;
+
+
+        /* =========================
+           PROFILE INITIALS
+        ========================= */
+
+        function loadProfileInitials() {
+
+            const currentUser =
+                JSON.parse(
+                    localStorage.getItem("currentUser")
+                );
+
+            if (!currentUser || !currentUser.name) {
+                profileButton.textContent = "U";
+                return;
+            }
+
+            const nameParts =
+                currentUser.name.trim().split(/\s+/);
+
+            let initials = "";
+
+            if (nameParts.length >= 2) {
+
+                initials =
+                    nameParts[0].charAt(0) +
+                    nameParts[1].charAt(0);
+
+            } else {
+
+                initials =
+                    nameParts[0].substring(0, 2);
+
+            }
+
+            profileButton.textContent =
+                initials.toUpperCase();
+
+        }
+
+
+        loadProfileInitials();
+
+
+        /* =========================
+           CHOOSE FILE
+        ========================= */
+
+        chooseButton.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                fileInput.click();
+
+            }
+        );
+
+
+        uploadArea.addEventListener(
+            "click",
+            function() {
+
+                fileInput.click();
+
+            }
+        );
+
+
+        /* =========================
+           FILE INPUT
+        ========================= */
+
+        fileInput.addEventListener(
+            "change",
+            function() {
+
+                if (this.files.length > 0) {
+
+                    handleFile(
+                        this.files[0]
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           DRAG & DROP
+        ========================= */
+
+        uploadArea.addEventListener(
+            "dragover",
+            function(event) {
+
+                event.preventDefault();
+
+                uploadArea.classList.add(
+                    "dragover"
+                );
+
+            }
+        );
+
+
+        uploadArea.addEventListener(
+            "dragleave",
+            function() {
+
+                uploadArea.classList.remove(
+                    "dragover"
+                );
+
+            }
+        );
+
+
+        uploadArea.addEventListener(
+            "drop",
+            function(event) {
+
+                event.preventDefault();
+
+                uploadArea.classList.remove(
+                    "dragover"
+                );
+
+                if (
+                    event.dataTransfer.files.length > 0
+                ) {
+
+                    handleFile(
+                        event.dataTransfer.files[0]
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           HANDLE FILE
+        ========================= */
+
+        function handleFile(file) {
+
+            hideError();
+
+            resultCard.style.display =
+                "none";
+
+
+            /* File type */
+
+            if (!file.type.startsWith("image/")) {
+
+                showError(
+                    "Please select a valid image file."
+                );
+
+                return;
+
+            }
+
+
+            /* File size */
+
+            if (
+                file.size >
+                5 * 1024 * 1024
+            ) {
+
+                showError(
+                    "Image size must be less than 5 MB."
+                );
+
+                return;
+
+            }
+
+
+            selectedFile =
+                file;
+
+
+            fileName.textContent =
+                "Selected: " + file.name;
+
+            fileName.style.display =
+                "block";
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function(event) {
+
+                    previewImage.src =
+                        event.target.result;
+
+                    previewContainer.style.display =
+                        "block";
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+
+
+        /* =========================
+           VERIFY MEDICINE
+        ========================= */
+
+        function verifyMedicine() {
+
+            hideError();
+
+
+            if (!selectedFile) {
+
+                showError(
+                    "Please upload a medicine image first."
+                );
+
+                return;
+
+            }
+
+
+            verifyButton.disabled =
+                true;
+
+            verificationLoader.style.display =
+                "block";
+
+            resultCard.style.display =
+                "none";
+
+
+            /*
+             * Current version:
+             * This is a front-end demo.
+             *
+             * It cannot actually identify a medicine
+             * from the pixels of the uploaded image.
+             *
+             * We therefore use the medicines saved
+             * in LocalStorage as the reference list.
+             */
+
+            setTimeout(
+                function() {
+
+                    const medicines =
+                        JSON.parse(
+                            localStorage.getItem("medicines")
+                        ) || [];
+
+
+                    verificationLoader.style.display =
+                        "none";
+
+                    verifyButton.disabled =
+                        false;
+
+
+                    if (medicines.length === 0) {
+
+                        showNoMedicineResult();
+
+                    } else {
+
+                        showReferenceResult(
+                            medicines
+                        );
+
+                    }
+
+
+                    resultCard.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                },
+                1500
+            );
+
+        }
+
+
+        /* =========================
+           RESULT WITH SAVED MEDICINES
+        ========================= */
+
+        function showReferenceResult(medicines) {
+
+            /*
+             * Since no AI/OCR model is connected,
+             * we cannot determine which medicine
+             * appears in the image.
+             *
+             * We show the saved medicine list
+             * as a reference instead of falsely
+             * claiming an image match.
+             */
+
+            resultCard.classList.remove("warning");
+
+            resultIcon.className =
+                "bi bi-info-circle-fill";
+
+            medicineResultIcon.className =
+                "bi bi-capsule-pill";
+
+            resultLabel.textContent =
+                "Assistive Check";
+
+            resultTitle.textContent =
+                "Medicine Reference Found";
+
+            medicineResultName.textContent =
+                medicines[0].name || "Saved Medicine";
+
+            medicineResultSubtitle.textContent =
+                medicines.length +
+                " medicine" +
+                (medicines.length > 1 ? "s" : "") +
+                " saved in My Medicines";
+
+            resultBadge.innerHTML =
+                '<i class="bi bi-info-circle"></i> Reference Only';
+
+            resultCard.style.display =
+                "block";
+
+            showToast(
+                "Image uploaded successfully. AI verification is not connected yet."
+            );
+
+        }
+
+
+        /* =========================
+           NO SAVED MEDICINES
+        ========================= */
+
+        function showNoMedicineResult() {
+
+            resultCard.classList.add("warning");
+
+            resultIcon.className =
+                "bi bi-exclamation-triangle-fill";
+
+            medicineResultIcon.className =
+                "bi bi-question-circle";
+
+            resultLabel.textContent =
+                "Verification Result";
+
+            resultTitle.textContent =
+                "No Medicine Reference Found";
+
+            medicineResultName.textContent =
+                "No saved medicines";
+
+            medicineResultSubtitle.textContent =
+                "Add a medicine first from Add Medicine";
+
+            resultBadge.innerHTML =
+                '<i class="bi bi-exclamation-circle"></i> Not Available';
+
+            resultCard.style.display =
+                "block";
+
+            showToast(
+                "Please add a medicine before using verification."
+            );
+
+        }
+
+
+        /* =========================
+           RESET
+        ========================= */
+
+        function resetVerification() {
+
+            selectedFile =
+                null;
+
+            fileInput.value =
+                "";
+
+            previewImage.src =
+                "";
+
+            fileName.textContent =
+                "";
+
+            fileName.style.display =
+                "none";
+
+            previewContainer.style.display =
+                "none";
+
+            resultCard.style.display =
+                "none";
+
+            resultCard.classList.remove(
+                "warning"
+            );
+
+            verificationLoader.style.display =
+                "none";
+
+            verifyButton.disabled =
+                false;
+
+            hideError();
+
+        }
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        function showError(message) {
+
+            errorMessage.textContent =
+                message;
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+
+        function hideError() {
+
+            errorMessage.style.display =
+                "none";
+
+        }
+
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        function goToProfile() {
+
+            window.location.href =
+                "User Profile.html";
+
+        }
+
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        function showToast(message) {
+
+            const toast =
+                document.createElement("div");
+
+            toast.className =
+                "toast-box";
+
+            toast.innerHTML =
+                `<i class="bi bi-info-circle-fill me-2"></i>${message}`;
+
+            document.body.appendChild(toast);
+
+
+            setTimeout(
+                function() {
+
+                    toast.style.opacity =
+                        "0";
+
+                    toast.style.transform =
+                        "translateY(15px)";
+
+                    toast.style.transition =
+                        "all .3s ease";
+
+
+                    setTimeout(
+                        () => toast.remove(),
+                        300
+                    );
+
+                },
+                2800
+            );
+
+        }
+
+    </script>
+
+
+    <!-- Bootstrap JS -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+</body>
+</html>
