@@ -285,35 +285,45 @@
 </div>
 
 
-<script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+
+    import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        updateProfile
+    } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBWeGUvgBEFiH9x3qu_hYtNWQa3tF58q4g",
+        authDomain: "smart-meditrack-22e4c.firebaseapp.com",
+        projectId: "smart-meditrack-22e4c",
+        storageBucket: "smart-meditrack-22e4c.firebasestorage.app",
+        messagingSenderId: "562677355962",
+        appId: "1:562677355962:web:6065db9bf80771a89ef983",
+        measurementId: "G-WWN81JKLL5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
     // Show / Hide Password
-    function togglePassword(inputId, iconId) {
-
+    window.togglePassword = function(inputId, iconId) {
         const input = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
 
         if (input.type === "password") {
-
             input.type = "text";
-
-            icon.classList.remove("bi-eye");
-            icon.classList.add("bi-eye-slash");
-
+            icon.classList.replace("bi-eye", "bi-eye-slash");
         } else {
-
             input.type = "password";
-
-            icon.classList.remove("bi-eye-slash");
-            icon.classList.add("bi-eye");
-
+            icon.classList.replace("bi-eye-slash", "bi-eye");
         }
-    }
+    };
 
-
-    // Register Account
-    document.getElementById("registerForm").addEventListener("submit", function(event) {
-
+    // Register with Firebase
+    document.getElementById("registerForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const name = document.getElementById("name").value.trim();
@@ -324,130 +334,86 @@
 
         const successMessage = document.getElementById("successMessage");
         const errorMessage = document.getElementById("errorMessage");
+        const button = document.querySelector(".register-btn");
 
         successMessage.style.display = "none";
         errorMessage.style.display = "none";
 
-
-        // Validate name
         if (name.length < 2) {
-
             errorMessage.innerText = "Please enter a valid name.";
             errorMessage.style.display = "block";
             return;
         }
 
-
-        // Validate email
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailPattern.test(email)) {
-
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             errorMessage.innerText = "Please enter a valid email address.";
             errorMessage.style.display = "block";
             return;
         }
 
-
-        // Validate phone
-        const phonePattern = /^[0-9]{10}$/;
-
-        if (!phonePattern.test(phone)) {
-
+        if (!/^[0-9]{10}$/.test(phone)) {
             errorMessage.innerText = "Please enter a valid 10-digit phone number.";
             errorMessage.style.display = "block";
             return;
         }
 
-
-        // Validate password
         if (password.length < 6) {
-
-            errorMessage.innerText =
-                "Password must contain at least 6 characters.";
-
+            errorMessage.innerText = "Password must contain at least 6 characters.";
             errorMessage.style.display = "block";
             return;
         }
 
-
-        // Confirm password
         if (password !== confirmPassword) {
-
-            errorMessage.innerText =
-                "Passwords do not match.";
-
+            errorMessage.innerText = "Passwords do not match.";
             errorMessage.style.display = "block";
             return;
         }
 
+        button.disabled = true;
 
-        // Get existing accounts
-        let accounts =
-            JSON.parse(localStorage.getItem("accounts")) || [];
+        try {
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
 
+            await updateProfile(userCredential.user, {
+                displayName: name
+            });
 
-        // Check duplicate email
-        const existingAccount = accounts.find(function(account) {
+            successMessage.innerText =
+                "Account created successfully! Redirecting to login...";
+            successMessage.style.display = "block";
 
-            return account.email === email;
+            document.getElementById("registerForm").reset();
 
-        });
+            setTimeout(function() {
+                window.location.href = "login.html";
+            }, 1200);
 
+        } catch (error) {
+            let message = "Registration failed. Please try again.";
 
-        if (existingAccount) {
+            if (error.code === "auth/email-already-in-use") {
+                message = "An account with this email already exists.";
+            } else if (error.code === "auth/invalid-email") {
+                message = "Please enter a valid email address.";
+            } else if (error.code === "auth/weak-password") {
+                message = "Please choose a stronger password.";
+            } else if (error.code === "auth/network-request-failed") {
+                message = "Network error. Please check your internet.";
+            }
 
-            errorMessage.innerText =
-                "An account with this email already exists.";
-
+            errorMessage.innerText = message;
             errorMessage.style.display = "block";
 
-            return;
+        } finally {
+            button.disabled = false;
         }
-
-
-        // Create new account
-        const newAccount = {
-
-            name: name,
-
-            email: email,
-
-            phone: phone,
-
-            password: password
-
-        };
-
-
-        // Save account
-        accounts.push(newAccount);
-
-        localStorage.setItem(
-            "accounts",
-            JSON.stringify(accounts)
-        );
-
-
-        // Show success
-        successMessage.innerText =
-            "Account created successfully! Redirecting to login...";
-
-        successMessage.style.display = "block";
-
-
-        // Clear form
-        document.getElementById("registerForm").reset();
-
-
-        // Redirect to login
-        setTimeout(function() {
-
-            window.location.href = "login.html";
-
-        }, 1200);
-
     });
+
+
 
 </script>
 

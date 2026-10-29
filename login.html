@@ -357,249 +357,126 @@
 </div>
 
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 
-<script>
+    import {
+        getAuth,
+        signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 
+    const firebaseConfig = {
+        apiKey: "AIzaSyBWeGUvgBEFiH9x3qu_hYtNWDa3tF58q4g",
+        authDomain: "smart-meditrack-22e4c.firebaseapp.com",
+        projectId: "smart-meditrack-22e4c",
+        storageBucket: "smart-meditrack-22e4c.firebasestorage.app",
+        messagingSenderId: "562677355962",
+        appId: "1:562677355962:web:6065db9bf80771a89ef983",
+        measurementId: "G-WWN81JKLL5"
+    };
 
-    // ================================
-    // LOAD REMEMBERED EMAIL
-    // ================================
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    const rememberedEmail =
-        localStorage.getItem("rememberedEmail");
-
-
-    if (rememberedEmail) {
-
-        document.getElementById("email").value =
-            rememberedEmail;
-
-        document.getElementById("rememberMe").checked =
-            true;
-    }
-
-
-
-    // ================================
-    // SHOW / HIDE PASSWORD
-    // ================================
-
-    function togglePassword() {
-
-        const password =
-            document.getElementById("password");
-
-        const icon =
-            document.getElementById("passwordIcon");
-
+    // Show / Hide Password
+    window.togglePassword = function () {
+        const password = document.getElementById("password");
+        const icon = document.getElementById("passwordIcon");
 
         if (password.type === "password") {
-
             password.type = "text";
-
-            icon.classList.remove("bi-eye");
-
-            icon.classList.add("bi-eye-slash");
-
+            icon.classList.replace("bi-eye", "bi-eye-slash");
         } else {
-
             password.type = "password";
-
-            icon.classList.remove("bi-eye-slash");
-
-            icon.classList.add("bi-eye");
-
+            icon.classList.replace("bi-eye-slash", "bi-eye");
         }
+    };
 
+    // Load remembered email
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+
+    if (rememberedEmail) {
+        document.getElementById("email").value = rememberedEmail;
+        document.getElementById("rememberMe").checked = true;
     }
 
-
-
-    // ================================
-    // LOGIN
-    // ================================
-
-    document
-        .getElementById("loginForm")
-        .addEventListener("submit", function(event) {
-
-
+    // Firebase Login
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
         event.preventDefault();
 
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const password = document.getElementById("password").value;
+        const rememberMe = document.getElementById("rememberMe").checked;
 
-        // Get values
-
-        const email =
-            document
-                .getElementById("email")
-                .value
-                .trim()
-                .toLowerCase();
-
-
-        const password =
-            document
-                .getElementById("password")
-                .value;
-
-
-        const rememberMe =
-            document
-                .getElementById("rememberMe")
-                .checked;
-
-
-        const successMessage =
-            document.getElementById(
-                "successMessage"
-            );
-
-
-        const errorMessage =
-            document.getElementById(
-                "errorMessage"
-            );
-
-
-        // Hide old messages
+        const successMessage = document.getElementById("successMessage");
+        const errorMessage = document.getElementById("errorMessage");
+        const loginButton = document.querySelector(".login-btn");
 
         successMessage.style.display = "none";
-
         errorMessage.style.display = "none";
 
-
-
-        // ================================
-        // VALIDATE EMAIL
-        // ================================
-
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        if (!emailPattern.test(email)) {
-
-            errorMessage.innerText =
-                "Please enter a valid email address.";
-
-            errorMessage.style.display =
-                "block";
-
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errorMessage.innerText = "Please enter a valid email address.";
+            errorMessage.style.display = "block";
             return;
         }
 
+        loginButton.disabled = true;
 
-
-        // ================================
-        // GET ACCOUNTS
-        // ================================
-
-        const accounts =
-            JSON.parse(
-                localStorage.getItem("accounts")
-            ) || [];
-
-
-
-        // ================================
-        // FIND ACCOUNT
-        // ================================
-
-        const account =
-            accounts.find(function(user) {
-
-                return (
-                    user.email &&
-                    user.email.toLowerCase() === email &&
-                    user.password === password
-                );
-
-            });
-
-
-
-        // ================================
-        // WRONG LOGIN
-        // ================================
-
-        if (!account) {
-
-            errorMessage.innerText =
-                "Incorrect email or password.";
-
-            errorMessage.style.display =
-                "block";
-
-            return;
-        }
-
-
-
-        // ================================
-        // LOGIN SUCCESS
-        // ================================
-
-        localStorage.setItem(
-            "loggedIn",
-            "true"
-        );
-
-
-        // Save current user
-
-        localStorage.setItem(
-            "currentUser",
-            JSON.stringify(account)
-        );
-
-
-
-        // ================================
-        // REMEMBER EMAIL
-        // ================================
-
-        if (rememberMe) {
-
-            localStorage.setItem(
-                "rememberedEmail",
-                email
+        try {
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
             );
 
-        } else {
+            const user = userCredential.user;
 
-            localStorage.removeItem(
-                "rememberedEmail"
-            );
+            // Keep compatibility with the existing dashboard
+            localStorage.setItem("loggedIn", "true");
+            localStorage.setItem("currentUser", JSON.stringify({
+                uid: user.uid,
+                name: user.displayName || "",
+                email: user.email
+            }));
 
+            // Remember email only, never the password
+            if (rememberMe) {
+                localStorage.setItem("rememberedEmail", email);
+            } else {
+                localStorage.removeItem("rememberedEmail");
+            }
+
+            successMessage.innerText = "Login successful! Redirecting...";
+            successMessage.style.display = "block";
+
+            setTimeout(function () {
+                window.location.href = "Dashboard.html";
+            }, 1000);
+
+        } catch (error) {
+            if (
+                error.code === "auth/invalid-credential" ||
+                error.code === "auth/wrong-password" ||
+                error.code === "auth/user-not-found"
+            ) {
+                errorMessage.innerText = "Incorrect email or password.";
+            } else if (error.code === "auth/invalid-email") {
+                errorMessage.innerText = "Please enter a valid email address.";
+            } else if (error.code === "auth/too-many-requests") {
+                errorMessage.innerText = "Too many attempts. Please try again later.";
+            } else {
+                errorMessage.innerText = "Login failed. Check your internet connection and try again.";
+                console.error("Firebase login error:", error);
+            }
+
+            errorMessage.style.display = "block";
+
+        } finally {
+            loginButton.disabled = false;
         }
-
-
-
-        // ================================
-        // SUCCESS MESSAGE
-        // ================================
-
-        successMessage.innerText =
-            "Login successful! Redirecting...";
-
-        successMessage.style.display =
-            "block";
-
-
-
-        // ================================
-        // GO TO DASHBOARD
-        // ================================
-
-        setTimeout(function() {
-
-            window.location.href =
-                "Dashboard.html";
-
-        }, 1000);
-
-
     });
+
 
 </script>
 
